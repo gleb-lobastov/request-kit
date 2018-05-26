@@ -1,0 +1,31 @@
+{
+  "name": "@request-kit/distribute-reducer",
+  "description": "Make hierarchical groups inside redux state",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "rimraf lib",
+    "test": "jest",
+    "build": "rollup -c -o lib/index.js",
+    "prepare": "npm run clean && npm run build"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gleb-lobastov/request-kit.git"
+  },
+  "keywords": [
+    "redux",
+    "hierarchy",
+    "state",
+    "reducer"
+  ],
+  "author": "Gleb Lobastov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gleb-lobastov/request-kit/issues"
+  },
+  "homepage": "https://github.com/gleb-lobastov/request-kit#readme"
+}
