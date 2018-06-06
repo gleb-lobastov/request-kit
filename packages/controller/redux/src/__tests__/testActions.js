@@ -9,7 +9,9 @@ const reduxMiddleware = createRequestMiddleware({
     preset() {
       return this;
     },
-    request: ({ response }) => Promise.resolve(response),
+    request: ({ response }) => (
+      response instanceof Error ? Promise.reject(response) : Promise.resolve(response)
+    ),
   },
 });
 const mockStore = configureStore([reduxMiddleware]);
