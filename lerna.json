@@ -3,6 +3,9 @@
   "version": "independent",
   "packages": [
     "packages/controller/*",
+    "packages/engine/*",
+    "packages/integration/*",
+    "packages/provision/*",
     "packages/utils/*"
   ]
 }

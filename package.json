@@ -47,7 +47,8 @@
     },
     "projects": [
       "<rootDir>/packages/engine/rest",
-      "<rootDir>/packages/controller/redux"
+      "<rootDir>/packages/controller/redux",
+      "<rootDir>/packages/provision/react"
     ],
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
