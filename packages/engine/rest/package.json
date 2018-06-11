@@ -1,11 +1,18 @@
 {
   "name": "@request-kit/engine-rest",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "wrapper over fetch or other http-client to make rest requests, compatible with other request-kit parts",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "clean": "rimraf lib",
+    "test": "jest",
+    "build": "rollup -c -o lib/index.js",
+    "prepare": "npm run clean && npm run build"
   },
+  "files": [
+    "lib",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gleb-lobastov/request-kit.git"

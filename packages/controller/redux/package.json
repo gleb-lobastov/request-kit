@@ -1,6 +1,6 @@
 {
   "name": "@request-kit/controller-redux",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "redux implementation of request controller: initialize requests and manage their state",
   "main": "lib/index.js",
   "scripts": {
@@ -9,6 +9,10 @@
     "build": "rollup -c -o lib/index.js",
     "prepare": "npm run clean && npm run build"
   },
+  "files": [
+    "lib",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gleb-lobastov/request-kit.git"
