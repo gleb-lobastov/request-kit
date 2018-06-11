@@ -1,6 +1,6 @@
 {
   "name": "@request-kit/provision-react",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "react high order component API to request and provide data. Not for direct usage, use @request-kit/react-redux instead",
   "main": "lib/index.js",
   "scripts": {
