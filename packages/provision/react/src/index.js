@@ -1,1 +1,1 @@
-export default from './createProvider';
+export { default } from './createProvider';
