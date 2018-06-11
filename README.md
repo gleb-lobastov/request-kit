@@ -6,4 +6,4 @@ Idea, that end user would use single "out-of-the-box" lib, when inside it would 
 
 Currently "rest-react-redux" stack is in development.
 
-See [project github homepage](https://github.com/gleb-lobastov/request-kit) for details
+Take a look to [react-redux combination](./packages/integration/react-redux/README.md#About)

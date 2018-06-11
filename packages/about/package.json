@@ -4,7 +4,8 @@
   "description": "\"landing page\" with info about \"request-kit\" project",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "copy": "cp ../../README.md ./README.md || copy /Y ../../README.md ./README.md",
+    "prepare": "npm run copy"
   },
   "repository": {
     "type": "git",
