@@ -2,11 +2,18 @@
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "prewatch": "npm run bootstrap",
+    "watch": "lerna run --parallel watch",
+    "start": "npm run watch"
+  },
   "devDependencies": {
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.1",
     "@commitlint/config-lerna-scopes": "^7.0.0",
-    "husky": "^1.0.0-rc.13"
+    "husky": "^1.0.0-rc.13",
+    "lerna": "^2.11.0"
   },
   "husky": {
     "hooks": {
