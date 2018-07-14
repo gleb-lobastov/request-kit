@@ -7,7 +7,9 @@
     "prewatch": "npm run bootstrap",
     "watch": "lerna run --parallel watch",
     "start": "npm run watch",
-    "prettier": "prettier --write 'packages/**/src/**'"
+    "prettier": "prettier --write 'packages/**/src/**'",
+    "pretest": "eslint packages",
+    "test": "NODE_ENV=test jest"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.0.0",
@@ -15,6 +17,7 @@
     "@commitlint/config-lerna-scopes": "^7.0.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.3",
+    "babel-jest": "^23.2.0",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -28,9 +31,30 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
     "husky": "^1.0.0-rc.13",
+    "jest": "^23.3.0",
     "lerna": "^2.11.0",
     "lint-staged": "^7.2.0",
     "prettier": "^1.12.1"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": ["src/**/*.{js,jsx}", "!**/__tests__/**"],
+    "coverageDirectory": "<rootDir>/coverage",
+    "coverageThreshold": {
+      "global": {
+        "branches": 70,
+        "functions": 85,
+        "lines": 85,
+        "statements": 85
+      }
+    },
+    "globals": {
+      "IS_PRODUCTION_ENV": false
+    },
+    "projects": ["<rootDir>/packages/*/*"],
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
   },
   "prettier": {
     "singleQuote": true,
