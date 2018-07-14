@@ -1,5 +1,5 @@
 {
   "lerna": "2.11.0",
   "version": "independent",
-  "packages": ["packages/engine/*"]
+  "packages": ["packages/engine/*", "packages/utils/*"]
 }
