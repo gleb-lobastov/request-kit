@@ -1,0 +1,25 @@
+{
+  "name": "request-kit",
+  "version": "0.0.1",
+  "description": "\"landing page\" with info about \"request-kit\" project",
+  "main": "index.js",
+  "scripts": {
+    "copy":
+      "cp ../../README.md ./README.md || copy /Y ../../README.md ./README.md",
+    "prepare": "npm run copy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gleb-lobastov/request-kit.git"
+  },
+  "keywords": ["readme", "data", "app", "spa"],
+  "author": "Gleb Lobastov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gleb-lobastov/request-kit/issues"
+  },
+  "homepage": "https://github.com/gleb-lobastov/request-kit",
+  "publishConfig": {
+    "access": "public"
+  }
+}
