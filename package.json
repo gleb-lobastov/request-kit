@@ -34,7 +34,13 @@
     "jest": "^23.3.0",
     "lerna": "^2.11.0",
     "lint-staged": "^7.2.0",
-    "prettier": "^1.12.1"
+    "prettier": "^1.12.1",
+    "rollup": "^0.48.2",
+    "rollup-plugin-babel": "^3.0.4",
+    "rollup-plugin-commonjs": "^8.3.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-uglify": "^3.0.0"
   },
   "jest": {
     "collectCoverage": true,
