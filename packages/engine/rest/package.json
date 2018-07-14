@@ -1,0 +1,39 @@
+{
+  "name": "@request-kit/engine-rest",
+  "version": "0.1.1",
+  "description":
+    "wrapper over fetch or other http-client to make rest requests, compatible with other request-kit parts",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf lib",
+    "test": "jest",
+    "build": "rollup -c --environment PACKAGE_NAME:$npm_package_name",
+    "watch": "rollup -c -w --environment PACKAGE_NAME:$npm_package_name",
+    "prepare": "npm run clean && npm run build"
+  },
+  "files": ["lib", "src"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gleb-lobastov/request-kit.git"
+  },
+  "keywords": ["rest", "request", "fetch", "submit", "http", "ajax", "xhr"],
+  "author": "Gleb Lobastov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gleb-lobastov/request-kit/issues"
+  },
+  "homepage": "https://github.com/gleb-lobastov/request-kit#readme",
+  "jest": {
+    "globals": {
+      "IS_PRODUCTION_ENV": false,
+      "window": {}
+    },
+    "setupFiles": ["./test/setupJestFetchMock.js"]
+  },
+  "devDependencies": {
+    "jest-fetch-mock": "^1.5.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
