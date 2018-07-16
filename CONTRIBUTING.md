@@ -4,6 +4,10 @@ type(scope): subject
 
 Body
 
+### Guideline
+
+https://conventionalcommits.org/
+
 ### Applicable commit- types
 
 * build
