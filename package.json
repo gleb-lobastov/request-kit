@@ -7,6 +7,8 @@
     "prewatch": "npm run bootstrap",
     "watch": "lerna run --parallel watch",
     "start": "npm run watch",
+    "prebuild": "npm run bootstrap",
+    "build": "lerna run --parallel build",
     "prettier": "prettier --write 'packages/**/src/**'",
     "pretest": "eslint packages",
     "test": "NODE_ENV=test jest"
