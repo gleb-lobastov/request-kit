@@ -1,8 +1,7 @@
 {
   "name": "@request-kit/controller-redux",
-  "version": "0.1.1",
-  "description":
-    "redux implementation of request controller: initialize requests and manage their state",
+  "version": "0.2.0",
+  "description": "redux implementation of request controller: initialize requests and manage their state",
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf lib",
@@ -11,12 +10,20 @@
     "watch": "rollup -c -w --environment PACKAGE_NAME:$npm_package_name",
     "prepare": "npm run clean && npm run build"
   },
-  "files": ["lib", "src"],
+  "files": [
+    "lib",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gleb-lobastov/request-kit.git"
   },
-  "keywords": ["redux", "request", "data", "state"],
+  "keywords": [
+    "redux",
+    "request",
+    "data",
+    "state"
+  ],
   "author": "Gleb Lobastov",
   "license": "MIT",
   "bugs": {
@@ -33,6 +40,5 @@
     "globals": {
       "IS_PRODUCTION_ENV": false
     }
-  },
-  "dependencies": {}
+  }
 }

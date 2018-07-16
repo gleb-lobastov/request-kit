@@ -1,8 +1,7 @@
 {
   "name": "@request-kit/distribute-reducer",
-  "version": "0.1.1",
-  "description":
-    "alter existent reducer to make hierarchical groups inside redux state",
+  "version": "0.2.0",
+  "description": "alter existent reducer to make hierarchical groups inside redux state",
   "author": "Gleb Lobastov",
   "license": "MIT",
   "main": "lib/index.js",
@@ -13,7 +12,10 @@
     "watch": "rollup -c -w --environment PACKAGE_NAME:$npm_package_name",
     "prepare": "npm run clean && npm run build"
   },
-  "files": ["lib", "src"],
+  "files": [
+    "lib",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gleb-lobastov/request-kit.git"
@@ -25,7 +27,12 @@
     "url": "https://github.com/gleb-lobastov/request-kit/issues"
   },
   "homepage": "https://github.com/gleb-lobastov/request-kit#readme",
-  "keywords": ["redux", "hierarchy", "state", "reducer"],
+  "keywords": [
+    "redux",
+    "hierarchy",
+    "state",
+    "reducer"
+  ],
   "jest": {
     "globals": {
       "IS_PRODUCTION_ENV": false
