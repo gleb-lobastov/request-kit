@@ -37,7 +37,7 @@ module.exports = {
   plugins: ['import', 'react', 'jest'],
   root: true,
   overrides: getPackageJsonPathsList().map(packageJsonPath => ({
-    files: [path.join(packageJsonPath, '..', '**/*.{js,jsx}')],
+    files: [path.join(packageJsonPath, '..', '**/*.{js,jsx,ts,tsx}')],
     rules: {
       'import/no-extraneous-dependencies': [
         'error',
