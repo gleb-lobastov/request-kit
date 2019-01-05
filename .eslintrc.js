@@ -39,10 +39,13 @@ module.exports = {
   overrides: getPackageJsonPathsList().map(packageJsonPath => ({
     files: [path.join(packageJsonPath, '..', '**/*.{js,jsx}')],
     rules: {
-      'import/no-extraneous-dependencies': {
-        packageDir: `./${path.join(packageJsonPath, '..')}/`,
-        devDependencies: devDependenciesGlobs,
-      },
+      'import/no-extraneous-dependencies': [
+        'error',
+        {
+          packageDir: `./${path.join(packageJsonPath, '..')}/`,
+          devDependencies: devDependenciesGlobs,
+        },
+      ],
     },
   })),
   rules: {
