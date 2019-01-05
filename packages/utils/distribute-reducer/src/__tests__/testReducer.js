@@ -1,4 +1,4 @@
-import distributeReducerByDomain from '../index';
+import distributeReducerByDomain from '../index.ts';
 
 const { consts } = distributeReducerByDomain;
 const TEST_ACTION_TYPE = 'TEST_ACTION_TYPE';
@@ -39,7 +39,9 @@ describe('distribution', () => {
     const action = {
       type: TEST_ACTION_TYPE,
       meta: {
-        domain: [requestDomain, requestSubdomain].join(consts.DOMAIN_SEPARATOR),
+        domain: [requestDomain, requestSubdomain].join(
+          consts.PATH_PARTITIONS_SEPARATOR,
+        ),
       },
     };
     const reducer = distributeReducerByDomain({
