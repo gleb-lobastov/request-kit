@@ -4,8 +4,9 @@ module.exports = function(api) {
   api.cache.using(() => isTesting);
   return {
     presets: [
-      ['@babel/env', { modules: isTesting ? 'commonjs' : false }],
-      '@babel/react',
+      '@babel/preset-react',
+      '@babel/preset-typescript',
+      ['@babel/preset-env', { modules: isTesting ? 'commonjs' : false }],
     ],
     plugins: [
       '@babel/plugin-proposal-object-rest-spread',

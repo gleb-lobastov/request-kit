@@ -7,11 +7,10 @@
     "prewatch": "npm run bootstrap",
     "watch": "lerna run --parallel watch",
     "start": "npm run watch",
-    "prebuild": "npm run bootstrap",
+    "prebuild": "tsc && npm run bootstrap",
     "build": "lerna run --parallel build",
     "prettier": "prettier --write 'packages/**/src/**'",
-    "pretest": "eslint packages",
-    "test": "NODE_ENV=test jest"
+    "test": "rimraf coverage && NODE_ENV=test jest"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -21,11 +20,14 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.1.0",
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.1",
     "@commitlint/config-lerna-scopes": "^7.0.0",
+    "@types/jest": "^23.3.11",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.2.0",
+    "babel-jest": "^23.6.0",
     "eslint": "^5.12.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^3.3.0",
@@ -34,7 +36,7 @@
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.12.3",
     "husky": "^1.0.0-rc.13",
-    "jest": "^23.3.0",
+    "jest": "^23.6.0",
     "lerna": "^2.11.0",
     "lint-staged": "^8.1.0",
     "prettier": "^1.12.1",
@@ -43,11 +45,15 @@
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-replace": "^2.0.0",
-    "rollup-plugin-uglify": "^6.0.0"
+    "rollup-plugin-uglify": "^6.0.0",
+    "typescript": "^3.2.2"
   },
   "jest": {
     "collectCoverage": true,
-    "collectCoverageFrom": ["src/**/*.{js,jsx}", "!**/__tests__/**"],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!**/__tests__/**"
+    ],
     "coverageDirectory": "<rootDir>/coverage",
     "coverageThreshold": {
       "global": {
@@ -60,9 +66,11 @@
     "globals": {
       "IS_PRODUCTION_ENV": false
     },
-    "projects": ["<rootDir>/packages/*/*"],
+    "projects": [
+      "<rootDir>/packages/*/*"
+    ],
     "transform": {
-      "^.+\\.jsx?$": "babel-jest"
+      "^.+\\.[jt]sx?$": "babel-jest"
     }
   },
   "prettier": {
@@ -77,7 +85,9 @@
     }
   },
   "lint-staged": {
-    "*.{js,json,md}": ["npm run prettier", "git add"]
-  },
-  "dependencies": {}
+    "*.{js,jsx,ts,tsx,json,md}": [
+      "npm run prettier",
+      "git add"
+    ]
+  }
 }

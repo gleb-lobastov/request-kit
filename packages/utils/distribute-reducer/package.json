@@ -36,6 +36,9 @@
   "jest": {
     "globals": {
       "IS_PRODUCTION_ENV": false
+    },
+    "transform": {
+      "^.+\\.[jt]sx?$": "babel-jest"
     }
   }
 }
