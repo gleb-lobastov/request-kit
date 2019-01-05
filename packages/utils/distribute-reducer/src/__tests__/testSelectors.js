@@ -1,10 +1,15 @@
-import distributeReducerByDomain from '../index';
-
-const { selectDomainState, selectDomainStates } = distributeReducerByDomain({
-  reducer: () => {},
-});
+import distributeReducerByDomain from '../index.ts';
 
 describe('selectDomainState', () => {
+  let selectDomainState;
+
+  beforeEach(() => {
+    const {
+      selectDomainState: selectDomainStateFn,
+    } = distributeReducerByDomain({ reducer: () => {} });
+    selectDomainState = selectDomainStateFn;
+  });
+
   it('should return value of "state" key if no domain is specified', () => {
     const rootDomainState = {};
     const state = { domainState: rootDomainState };
@@ -56,6 +61,15 @@ describe('selectDomainState', () => {
 });
 
 describe('selectDomainStates', () => {
+  let selectDomainStates;
+
+  beforeEach(() => {
+    const {
+      selectDomainStates: selectDomainStatesFn,
+    } = distributeReducerByDomain({ reducer: () => {} });
+    selectDomainStates = selectDomainStatesFn;
+  });
+
   it('should return single item array with value of "state" key if no domain is specified', () => {
     const rootDomainState = {};
     const state = { domainState: rootDomainState };
@@ -107,7 +121,7 @@ describe('selectDomainStates', () => {
     );
   });
 
-  it('should ignore undefined states', () => {
+  it('should not ignore undefined states (leave it for user land)', () => {
     const domain = 'domain';
     const nestedDomainStateA = { nestedDomainStateA: true };
     const state = {
@@ -118,10 +132,14 @@ describe('selectDomainStates', () => {
             nestedB: undefined,
             nestedC: { domainState: undefined },
           },
-          domainState: undefined,
+          domainState: null,
         },
       },
     };
-    expect(selectDomainStates(state, domain)).toEqual([nestedDomainStateA]);
+    expect(selectDomainStates(state, domain)).toEqual([
+      null,
+      nestedDomainStateA,
+      undefined,
+    ]);
   });
 });

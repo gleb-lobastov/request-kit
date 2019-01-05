@@ -29,7 +29,6 @@ const {
   /* Configuration */
   domainSeparator,
   domainProperty,
-  onError,
   reducer, // only required
 });
 ```
@@ -44,5 +43,4 @@ const {
 
 1.  **domainSeparator** – sign used to separate nested domain names in path. Default to '.'
 1.  **domainProperty** – specify domain path property in redux action. Could be string (dot-separated path) or function, that receives action. Default to 'meta.domain'
-1.  **onError** – custom known error handler, default to just throw new Error
 1.  **reducer** – wrapped reducer. Required!
