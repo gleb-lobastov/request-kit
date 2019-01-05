@@ -11,8 +11,8 @@ export default {
   },
   plugins: [
     babel({
+      rootMode: 'upward',
       exclude: 'node_modules/**',
-      plugins: ['external-helpers'],
     }),
     replace({
       IS_PRODUCTION_ENV: !process.env.ROLLUP_WATCH,

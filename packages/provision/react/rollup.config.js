@@ -4,6 +4,7 @@ import replace from 'rollup-plugin-replace';
 import resolve from 'rollup-plugin-node-resolve';
 
 export default {
+  LA_la: 1,
   input: 'src/index.js',
   output: {
     format: 'cjs',
@@ -14,8 +15,8 @@ export default {
       extensions: ['.js', '.jsx'],
     }),
     babel({
+      rootMode: 'upward',
       exclude: 'node_modules/**',
-      plugins: ['external-helpers'],
     }),
     replace({
       IS_PRODUCTION_ENV: !process.env.ROLLUP_WATCH,
