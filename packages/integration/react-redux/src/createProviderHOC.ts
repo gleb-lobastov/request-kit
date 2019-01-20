@@ -65,6 +65,9 @@ export default ({
         : mapStateToProps;
 
     return Component =>
-      compose(connect(actualMapStateToProps), provideHocInternal())(Component);
+      compose(
+        connect(actualMapStateToProps),
+        provideHocInternal(),
+      )(Component);
   };
 };
