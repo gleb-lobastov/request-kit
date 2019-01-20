@@ -20,7 +20,10 @@ class RequestEngine {
       fetchHandler = fetch,
       plugins = [endpointResolver],
     } = this.configuration;
-    this.fetchHandler = compose(...plugins, fetchAdapter)(fetchHandler);
+    this.fetchHandler = compose(
+      ...plugins,
+      fetchAdapter,
+    )(fetchHandler);
   }
 
   preset(presetOptions) {
