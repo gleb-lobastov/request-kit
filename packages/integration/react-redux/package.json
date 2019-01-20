@@ -37,7 +37,7 @@
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "glob": "^7.1.2",
-    "jest-enzyme": "^6.0.1",
+    "jest-enzyme": "^7.0.1",
     "promise.prototype.finally": "^3.1.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
@@ -55,10 +55,20 @@
     "globals": {
       "IS_PRODUCTION_ENV": false
     },
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json",
+      "ts",
+      "tsx"
+    ],
     "setupTestFrameworkScriptFile": "./node_modules/jest-enzyme/lib/index.js",
     "setupFiles": [
       "./test/setupEnzyme.js",
       "./test/promiseShim.js"
-    ]
+    ],
+    "transform": {
+      "^.+\\.[jt]sx?$": "babel-jest"
+    }
   }
 }
