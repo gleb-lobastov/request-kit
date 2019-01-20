@@ -42,7 +42,7 @@ module.exports = {
       'import/no-extraneous-dependencies': [
         'error',
         {
-          packageDir: `./${path.join(packageJsonPath, '..')}/`,
+          packageDir: `./${path.join(packageJsonPath, '.')}/`,
           devDependencies: devDependenciesGlobs,
         },
       ],
