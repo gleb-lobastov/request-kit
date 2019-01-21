@@ -1,7 +1,8 @@
 import React from 'react';
 import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
 import { mount } from 'enzyme';
-import configureRequestKit from '../index';
+import configureRequestKit from '../index.ts';
 
 const CLASS_NAME = 'CLASS_NAME';
 const getResponse = require => `response for: ${require}`;
@@ -43,10 +44,18 @@ describe('provide integration', () => {
   it('should indicate pending state after request is initiated', () => {
     const query = 'query';
     const instance = mount(
-      <ProvisionedComponent query={query} store={store} />,
+      <Provider store={store}>
+        <ProvisionedComponent query={query} />,
+      </Provider>,
     );
-    expect(instance.children().props().provision).toEqual({
-      provision: undefined,
+
+    const presenter = instance
+      .children()
+      .children()
+      .children();
+
+    expect(presenter.props().provision).toEqual({
+      value: undefined,
       fallback: undefined,
       isPending: true,
       isComplete: false,
@@ -59,17 +68,25 @@ describe('provide integration', () => {
     const query = 'query';
     const requestFulfilmentPromise = new Promise(resolve => {
       const instance = mount(
-        <ProvisionedComponent
-          query={query}
-          store={store}
-          onRequest={promise => promise.finally(() => resolve(instance))}
-        />,
+        <Provider store={store}>
+          <ProvisionedComponent
+            query={query}
+            onRequest={promise => promise.finally(() => resolve(instance))}
+          />
+        </Provider>,
       );
     });
     const instance = await requestFulfilmentPromise;
-    instance.update();
-    expect(instance.children().props().provision).toEqual({
-      provision: { receive: getResponse(query) },
+    await new Promise(r => setTimeout(r, 500));
+    const presenter = instance
+      .update()
+      .children()
+      .children()
+      .children();
+
+    console.log(presenter.props());
+    expect(presenter.props().provision).toEqual({
+      value: { receive: getResponse(query) },
       fallback: { receive: getResponse(query) },
       isPending: false,
       isComplete: true,
@@ -79,32 +96,49 @@ describe('provide integration', () => {
 
   it('should make request for each requirements changed', async () => {
     expect.assertions(1);
+    const renderProvisionedComponent = props => (
+      <ProvisionedComponent {...props} />
+    );
     const queryA = 'queryA';
     const queryB = 'queryB';
     const requestState = { isFirstRequest: true };
     const requestFulfilmentPromise = new Promise(resolve => {
-      const instance = mount(
-        <ProvisionedComponent
-          query={queryA}
-          store={store}
-          onRequest={promise =>
-            promise.finally(() => {
-              if (requestState.isFirstRequest) {
-                instance.update();
-                instance.setProps({ query: queryB });
-                requestState.isFirstRequest = false;
-              } else {
-                resolve(instance);
-              }
-            })
+      let instance;
+
+      const requestHandler = promise =>
+        promise.finally(() => {
+          if (requestState.isFirstRequest) {
+            instance.update();
+            instance.setProps({
+              children: renderProvisionedComponent({
+                query: queryB,
+                onRequest: requestHandler,
+              }),
+            });
+            requestState.isFirstRequest = false;
+          } else {
+            resolve(instance);
           }
-        />,
+        });
+
+      instance = mount(
+        <Provider store={store}>
+          {renderProvisionedComponent({
+            query: queryA,
+            onRequest: requestHandler,
+          })}
+        </Provider>,
       );
     });
     const instance = await requestFulfilmentPromise;
-    instance.update();
-    expect(instance.children().props().provision).toEqual({
-      provision: { receive: getResponse(queryB) },
+    const presenter = instance
+      .update()
+      .children()
+      .children()
+      .children();
+
+    expect(presenter.props().provision).toEqual({
+      value: { receive: getResponse(queryB) },
       fallback: { receive: getResponse(queryB) },
       isPending: false,
       isComplete: true,
@@ -117,17 +151,23 @@ describe('provide integration', () => {
     const error = new Error('Oops');
     const requestFulfilmentPromise = new Promise(resolve => {
       const instance = mount(
-        <ProvisionedComponent
-          query={error}
-          store={store}
-          onRequest={promise => promise.finally(() => resolve(instance))}
-        />,
-      );
+        <Provider store={store}>
+          <ProvisionedComponent
+            query={error}
+            onRequest={promise => promise.finally(() => resolve(instance))}
+          />
+        </Provider>,
+      ).children();
     });
     const instance = await requestFulfilmentPromise;
-    instance.update();
-    expect(instance.children().props().provision).toEqual({
-      provision: undefined,
+    const presenter = instance
+      .update()
+      .children()
+      .children()
+      .children();
+
+    expect(presenter.props().provision).toEqual({
+      value: undefined,
       fallback: undefined,
       isPending: false,
       isComplete: true,
