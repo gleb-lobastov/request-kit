@@ -1,29 +1,28 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import createProvider from '../createProvider';
+import createProvider from '../createProvider.tsx';
 
 const CLASS_NAME = 'CLASS_NAME';
 const PROVISION = 'PROVISION_EXAMPLE';
 
 const Presenter = () => <div className={CLASS_NAME} />;
 
-let mapPropsToRequirements;
 let requireProvision;
 let resolveProvision;
 let provide;
 beforeEach(() => {
-  mapPropsToRequirements = jest.fn(({ requirements }) => requirements);
   requireProvision = jest.fn(() => Promise.resolve());
   resolveProvision = jest.fn(() => PROVISION);
   provide = createProvider({
     requireProvision,
     resolveProvision,
+    requirementsComparator: (a, b) => a === b,
   });
 });
 
 describe('Provider', () => {
   it('should render wrapped component', () => {
-    const WrappedComponent = provide(mapPropsToRequirements)(Presenter);
+    const WrappedComponent = provide(Presenter);
     expect(
       shallow(<WrappedComponent />)
         .dive()
@@ -32,29 +31,29 @@ describe('Provider', () => {
   });
 
   it('should require provision on first mount', () => {
-    const WrappedComponent = provide(mapPropsToRequirements)(Presenter);
+    const WrappedComponent = provide(Presenter);
     const requirements = 'requirements';
     const props = { requirements };
     shallow(<WrappedComponent {...props} />).dive();
     expect(requireProvision.mock.calls).toEqual([
-      [requirements, expect.objectContaining(props)],
+      [expect.objectContaining(props)],
     ]);
   });
 
   it('should require provision on update if requirements is changed', () => {
-    const WrappedComponent = provide(mapPropsToRequirements)(Presenter);
+    const WrappedComponent = provide(Presenter);
     const propsA = { requirements: 'requirementsA' };
     const propsB = { requirements: 'requirementsB' };
     const instance = shallow(<WrappedComponent {...propsA} />);
     instance.setProps(propsB);
     expect(requireProvision.mock.calls).toEqual([
-      [propsA.requirements, expect.objectContaining(propsA)],
-      [propsB.requirements, expect.objectContaining(propsB)],
+      [expect.objectContaining(propsA)],
+      [expect.objectContaining(propsB)],
     ]);
   });
 
   it('should not require provision on update if requirements is equal', () => {
-    const WrappedComponent = provide(mapPropsToRequirements)(Presenter);
+    const WrappedComponent = provide(Presenter);
     const props = { requirements: 'requirements' };
     const instance = shallow(<WrappedComponent {...props} />);
     instance.setProps({
@@ -62,12 +61,12 @@ describe('Provider', () => {
       whateverToEnsureUpdate: true,
     });
     expect(requireProvision.mock.calls).toEqual([
-      [props.requirements, expect.objectContaining(props)],
+      [expect.objectContaining(props)],
     ]);
   });
 
   it('should pass provision prop to wrapped component, gained from resolveProvision func', () => {
-    const WrappedComponent = provide(mapPropsToRequirements)(Presenter);
+    const WrappedComponent = provide(Presenter);
     const props = shallow(
       <WrappedComponent requirements="does not matter" />,
     ).props();

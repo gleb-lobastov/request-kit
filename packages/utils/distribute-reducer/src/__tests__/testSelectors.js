@@ -121,7 +121,7 @@ describe('selectDomainStates', () => {
     );
   });
 
-  it('should not ignore undefined states (leave it for user land)', () => {
+  it('should ignore undefined states', () => {
     const domain = 'domain';
     const nestedDomainStateA = { nestedDomainStateA: true };
     const state = {
@@ -139,7 +139,6 @@ describe('selectDomainStates', () => {
     expect(selectDomainStates(state, domain)).toEqual([
       null,
       nestedDomainStateA,
-      undefined,
     ]);
   });
 });

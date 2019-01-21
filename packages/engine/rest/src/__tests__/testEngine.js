@@ -1,4 +1,5 @@
-import createRequestEngine, { requestConsts } from '../index';
+import createRequestEngine, { requestConsts } from '../index.ts';
+import endpointResolver from '../test/plugins/endpointResolver';
 
 beforeEach(() => {
   window.fetch.resetMocks();
@@ -71,7 +72,9 @@ describe('configuration', () => {
 
   describe('request endpoint', () => {
     beforeEach(() => {
-      requestEngine = createRequestEngine();
+      requestEngine = createRequestEngine({
+        plugins: [endpointResolver],
+      });
     });
 
     it('should send request to specified endpoint', () => {
