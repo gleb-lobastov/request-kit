@@ -5,12 +5,14 @@
   "author": "Gleb Lobastov",
   "license": "MIT",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "clean": "rimraf lib",
     "test": "jest",
     "build": "rollup -c --environment PACKAGE_NAME:$npm_package_name",
+    "build:typings": "tsc",
     "watch": "rollup -c -w --environment PACKAGE_NAME:$npm_package_name",
-    "prepare": "npm run clean && npm run build"
+    "prepare": "npm run clean && npm run build:typings && npm run build"
   },
   "files": [
     "lib",

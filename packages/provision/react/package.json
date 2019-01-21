@@ -3,12 +3,14 @@
   "version": "0.2.0",
   "description": "react high order component API to request and provide data. Not for direct usage, use @request-kit/react-redux instead",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "clean": "rimraf lib",
     "test": "jest",
     "build": "rollup -c --environment PACKAGE_NAME:$npm_package_name",
+    "build:typings": "tsc",
     "watch": "rollup -c -w --environment PACKAGE_NAME:$npm_package_name",
-    "prepare": "npm run clean && npm run build"
+    "prepare": "npm run clean && npm run build:typings && npm run build"
   },
   "files": [
     "lib",
@@ -40,6 +42,7 @@
     "react-dom": "^16.4.0"
   },
   "devDependencies": {
+    "@types/react": "^16.7.20",
     "deep-equal": "^1.0.1",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
