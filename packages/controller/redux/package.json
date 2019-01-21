@@ -1,6 +1,6 @@
 {
   "name": "@request-kit/controller-redux",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "redux implementation of request controller: initialize requests and manage their state",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
