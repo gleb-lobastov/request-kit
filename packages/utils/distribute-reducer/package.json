@@ -1,6 +1,6 @@
 {
   "name": "@request-kit/distribute-reducer",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "alter existent reducer to make hierarchical groups inside redux state",
   "author": "Gleb Lobastov",
   "license": "MIT",

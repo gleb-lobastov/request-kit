@@ -1,6 +1,6 @@
 {
   "name": "@request-kit/engine-rest",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "wrapper over fetch or other http-client to make rest requests, compatible with other request-kit parts",
   "main": "index.js",
   "types": "lib/index.d.ts",
