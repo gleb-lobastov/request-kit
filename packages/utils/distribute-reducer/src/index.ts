@@ -2,13 +2,13 @@
  * remove prior to v1.0.0
  * @deprecated use DistributorOptions instead
  */
-interface PrevDistributorOptionsFormat {
+export interface PrevDistributorOptionsFormat {
   domainSeparator?: string; // DistributorOptions.pathPartitionsSeparator
   domainProperty?: string | DomainPathResolver; // DistributorOptions.pathProperty
   reducer: TargetReducer; // DistributorOptions.targetReducer
 }
 
-interface DistributorOptions {
+export interface DistributorOptions {
   pathPartitionsSeparator?: string;
   pathProperty?: string | DomainPathResolver;
   targetReducer: TargetReducer;
@@ -16,9 +16,11 @@ interface DistributorOptions {
 
 type Optional<T> = T | undefined;
 
-// State and a action is "bypass" props and not allowed to be disclosed inside this lob
-interface ForwardedState {}
-interface ForwardedAction {}
+// State and a action is "bypass" props and not allowed to be disclosed inside this lib
+export interface ForwardedState {}
+export interface ForwardedAction {
+  type: string | symbol;
+}
 
 type TargetReducer = (
   state: Optional<ForwardedState>,
@@ -37,6 +39,8 @@ type Domain = {
   domains?: { [pathPartition: string]: Domain };
   domainState?: ForwardedState;
 };
+
+export interface State {}
 
 const consts = {
   PATH_PARTITIONS_SEPARATOR: '.',
@@ -106,15 +110,16 @@ class Distributor {
     );
   }
 
-  selectNestedDomainStates(baseDomain: Optional<Domain>): ForwardedState[] {
+  selectNestedDomainStates(
+    baseDomain: Optional<Domain>,
+  ): Array<Optional<ForwardedState>> {
     if (!baseDomain) {
       return [];
     }
     if (!baseDomain.domains) {
       return [baseDomain.domainState];
     }
-    return [].concat(
-      baseDomain.domainState,
+    return [baseDomain.domainState].concat(
       ...Object.keys(baseDomain.domains).map((pathPartition: string) =>
         this.selectNestedDomainStates(
           getNestedDomain(baseDomain, pathPartition),
@@ -135,11 +140,16 @@ class Distributor {
   selectDomainStates(
     rootDomain: Optional<Domain>,
     domain?: string,
-  ): ForwardedState[] {
-    return this.selectNestedDomainStates(this.selectDomain(rootDomain, domain));
+  ): Array<ForwardedState> {
+    return this.selectNestedDomainStates(
+      this.selectDomain(rootDomain, domain),
+    ).filter(
+      (state: Optional<ForwardedState>): state is ForwardedState =>
+        typeof state !== 'undefined',
+    );
   }
 
-  reduce(prevRootDomain: Optional<Domain> = {}, action: ForwardedAction) {
+  reduce(prevRootDomain: Optional<State> = {}, action: ForwardedAction) {
     const domainPath = this.resolveDomainPath(action);
     if (!domainPath) {
       return prevRootDomain;
@@ -184,11 +194,11 @@ const createDistributeReducer = (options: PrevDistributorOptionsFormat) => {
     targetReducer: reducer,
   });
   return {
-    reduce: (state: Domain, action: ForwardedAction) =>
+    reduce: (state: State, action: ForwardedAction) =>
       distributor.reduce(state, action),
-    selectDomainState: (state: Domain, domainPath: string) =>
+    selectDomainState: (state: State, domainPath: string) =>
       distributor.selectDomainState(state, domainPath),
-    selectDomainStates: (state: Domain, domainPath: string) =>
+    selectDomainStates: (state: State, domainPath: string) =>
       distributor.selectDomainStates(state, domainPath),
   };
 };
