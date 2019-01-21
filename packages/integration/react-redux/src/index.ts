@@ -5,7 +5,12 @@ import {
 } from '@request-kit/controller-redux';
 import createProviderHOC from './createProviderHOC';
 
-export default ({ engine, provisionStateSelector }) => {
+interface IntegrationOptions {
+  engine: any;
+  provisionStateSelector?: string | Function | undefined;
+}
+
+export default ({ engine, provisionStateSelector }: IntegrationOptions) => {
   const { reduce, selectDomainState } = createDistributeReducer({
     reducer: createRequestReducer(),
   });

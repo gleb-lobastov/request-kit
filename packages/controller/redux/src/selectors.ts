@@ -1,27 +1,39 @@
 import * as consts from './consts';
+import {
+  State,
+  ReadyState,
+  Result,
+  SuccessResultState,
+  FailureResultState,
+} from './types';
 
-export const selectReadyState = state => state.readyState;
-export const selectIsReady = state =>
-  state.readyState === consts.READY_STATE.DONE;
-export const selectIsPending = state =>
-  !selectIsReady(state) && state.readyState !== consts.READY_STATE.UNSENT;
+type Optional<T> = T | undefined;
 
-const checkHasProperty = (object, property) =>
+const checkHasProperty = (object: object, property: string): boolean =>
   Object.prototype.hasOwnProperty.call(object, property);
 
-export const selectRelevantResult = state => {
+export const selectReadyState = (state: State): ReadyState =>
+  state.readyState || consts.READY_STATE.UNSENT;
+
+export const selectIsReady = (state: State): boolean =>
+  state.readyState === consts.READY_STATE.DONE;
+
+export const selectIsPending = (state: State): boolean =>
+  !selectIsReady(state) && state.readyState !== consts.READY_STATE.UNSENT;
+
+export const selectRelevantResult = (state: State): Optional<Result> => {
   if (!state || !state.recent || !checkHasProperty(state.recent, 'result')) {
     return undefined;
   }
-  return state.recent.result;
+  return (<SuccessResultState>state.recent).result;
 };
 
-export const selectAvailableResult = state => {
+export const selectAvailableResult = (state: State): Optional<Result> => {
   if (!state) {
     return undefined;
   }
   if (state.recent && checkHasProperty(state.recent, 'result')) {
-    return state.recent.result;
+    return (<SuccessResultState>state.recent).result;
   }
   if (
     state.lastSuccessful &&
@@ -32,9 +44,9 @@ export const selectAvailableResult = state => {
   return undefined;
 };
 
-export const selectError = state => {
+export const selectError = (state: State): Optional<Error> => {
   if (!state || !state.recent || !checkHasProperty(state.recent, 'error')) {
     return undefined;
   }
-  return state.recent.error;
+  return (<FailureResultState>state.recent).error;
 };

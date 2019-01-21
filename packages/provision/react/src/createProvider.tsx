@@ -1,77 +1,92 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import isDeepEqual from 'deep-equal';
 
-export default ({
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+type Forbid<T> = { [P in keyof T]: never };
+
+type TRequirements = any;
+type TProvision = any;
+
+interface IRequirementsProps {
+  readonly requirements: TRequirements;
+}
+
+interface IConsumedProps extends IRequirementsProps {
+  onRequest?: (request: Promise<any>) => void;
+}
+
+interface IInjectedProps {
+  readonly provision: TProvision;
+}
+
+export interface IProviderOptions<ICallbackProps> {
+  requireProvision: (props: ICallbackProps) => Promise<any>;
+  resolveProvision: (props: ICallbackProps) => TProvision;
+  requirementsComparator: (a: TRequirements, b: TRequirements) => boolean;
+  propsToOmit?: Array<keyof (ICallbackProps & IConsumedProps)>;
+}
+
+// todo memoize
+const omit = <T, K extends keyof T>(object: T, attrs: Array<K>): Omit<T, K> => {
+  return Object.entries(object).reduce((result: any, [key, value]) => {
+    if (!attrs.includes(key as K)) {
+      result[key] = value;
+    }
+    return result;
+  }, {});
+};
+
+export default <ICallbackProps extends IRequirementsProps>({
   requireProvision,
   resolveProvision,
-  equalityMatcher = isDeepEqual,
-  shouldSpreadProvisionInWrapperProps = false,
-  propsAdapter = props => props,
-}) => ({
-  mapPropsToRequirements = ({ requirements }) => requirements,
-} = {}) => WrappedComponent => {
-  class Provider extends React.Component {
-    static propTypes = {
-      onRequest: PropTypes.func,
-    };
+  requirementsComparator,
+  propsToOmit = [],
+}: IProviderOptions<ICallbackProps>) => <
+  IInputProps extends IConsumedProps & ICallbackProps & Forbid<IInjectedProps>
+>(
+  WrappedComponent: React.ComponentType<
+    IInjectedProps & Omit<IInputProps, keyof (IConsumedProps & ICallbackProps)>
+  >,
+) =>
+  class extends React.Component<IInputProps> {
+    static displayName = `Provided(${WrappedComponent.displayName ||
+      WrappedComponent.name ||
+      'WrappedComponent'})`;
 
-    static defaultProps = {
-      onRequest: () => {},
-    };
-
-    static getDerivedStateFromProps(nextProps) {
-      const requirements = mapPropsToRequirements(nextProps);
-      return {
-        requirements,
-        provision: resolveProvision(requirements, nextProps),
-      };
-    }
-
-    constructor(props, context) {
-      super(props, context);
-      this.state = {
-        requirements: undefined,
-        provision: undefined,
-      };
-    }
-
-    componentDidMount() {
+    componentDidMount(): void {
       this.require();
     }
 
-    componentDidUpdate(prevProps, prevState) {
-      const { requirements: prevRequirements } = prevState;
-      const { requirements: nextRequirements } = this.state;
-
-      if (!equalityMatcher(prevRequirements, nextRequirements)) {
+    componentDidUpdate(prevProps: IInputProps): void {
+      const { requirements: prevRequirements } = prevProps;
+      const { requirements: nextRequirements, provision } = this.props;
+      console.log('cdu', provision);
+      if (!requirementsComparator(prevRequirements, nextRequirements)) {
         this.require();
       }
     }
 
-    require() {
+    require(): void {
       const { onRequest: handleRequest } = this.props;
-
-      const { requirements } = this.state;
-
-      handleRequest(requireProvision(requirements, this.props));
+      const response = requireProvision(this.props);
+      response.then(r => console.log({ r }));
+      if (handleRequest) {
+        handleRequest(response);
+      }
     }
 
-    render() {
-      const { provision } = this.state;
+    render(): any {
+      const actualProps = propsToOmit
+        ? omit<IInputProps, keyof (IConsumedProps & ICallbackProps)>(
+            this.props,
+            propsToOmit,
+          )
+        : this.props;
 
-      const provisionObject = shouldSpreadProvisionInWrapperProps
-        ? provision
-        : { provision };
       return (
-        <WrappedComponent {...propsAdapter(this.props)} {...provisionObject} />
+        <WrappedComponent
+          provision={resolveProvision(this.props)}
+          {...actualProps}
+        />
       );
     }
-  }
-
-  const internalName =
-    WrappedComponent.displayName || WrappedComponent.name || 'Component';
-  Provider.displayName = `Provided(${internalName})`;
-
-  return Provider;
-};
+  };

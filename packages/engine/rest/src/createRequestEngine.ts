@@ -1,32 +1,61 @@
-import endpointResolver from './plugins/endpointResolver';
+export interface Options {
+  headers?: object;
+}
 
-const mergeOptions = (...sources) => {
+type Result = object;
+type Processor = (options: Options, ...args: any[]) => Promise<Result>;
+
+export interface FetchHandler {
+  (...args: any[]): Promise<Result>;
+}
+export interface Plugin {
+  (next: Plugin | FetchHandler): Processor;
+}
+export interface EngineConfiguration {
+  fetchHandler?: FetchHandler;
+  fetchAdapter?: Plugin;
+  plugins?: Plugin[];
+  presetOptions?: Options;
+}
+
+const compose = (...fns: Function[]) => (params: any) =>
+  fns.reduceRight((composed, fn) => fn(composed), params);
+
+const mergeOptions = (...sources: Options[]) => {
   const mergedHeaders = Object.assign(
     {},
     ...sources.map(({ headers = {} } = {}) => headers),
   );
   return Object.assign({}, ...sources, { headers: mergedHeaders });
 };
-const compose = (...fns) => params =>
-  fns.reduceRight((composed, fn) => fn(composed), params);
-const defaultFetchAdapter = next => ({ endpoint, ...restOptions }) =>
-  next(endpoint, restOptions);
+
+const defaultFetchAdapter = (next: FetchHandler) => ({
+  endpoint,
+  ...restOptions
+}: {
+  endpoint: string;
+}) => next(endpoint, restOptions);
 
 class RequestEngine {
-  constructor(configuration = {}) {
+  configuration: EngineConfiguration;
+  requestHandler: FetchHandler;
+
+  constructor(configuration: EngineConfiguration = {}) {
     this.configuration = configuration;
     const {
-      fetchAdapter = defaultFetchAdapter,
       fetchHandler = fetch,
-      plugins = [endpointResolver],
-    } = this.configuration;
-    this.fetchHandler = compose(
-      ...plugins,
       fetchAdapter,
-    )(fetchHandler);
+      plugins = [],
+    } = this.configuration;
+    const actualFetchAdapter =
+      !fetchAdapter && fetchHandler === fetch ? defaultFetchAdapter : null;
+    const actualPlugins = actualFetchAdapter
+      ? [...plugins, actualFetchAdapter]
+      : plugins;
+    this.requestHandler = compose(...actualPlugins)(fetchHandler);
   }
 
-  preset(presetOptions) {
+  preset(presetOptions: Options) {
     const { presetOptions: currentOptions } = this.configuration;
     return new RequestEngine({
       ...this.configuration,
@@ -36,10 +65,10 @@ class RequestEngine {
     });
   }
 
-  request(requestOptions) {
+  request(requestOptions: Options) {
     const { presetOptions } = this.configuration;
 
-    return this.fetchHandler(
+    return this.requestHandler(
       presetOptions
         ? mergeOptions(presetOptions, requestOptions)
         : requestOptions,
@@ -47,4 +76,5 @@ class RequestEngine {
   }
 }
 
-export default configuration => new RequestEngine(configuration);
+export default (configuration: EngineConfiguration) =>
+  new RequestEngine(configuration);

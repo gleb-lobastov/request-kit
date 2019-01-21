@@ -4,70 +4,121 @@ import {
   createRequestAction,
   requestSelectors,
 } from '@request-kit/controller-redux';
+import { memoizeByLastArgs } from './memo';
 
-const compose = (...funcs) => arg =>
+const compose = (...funcs: Function[]) => (arg: any) =>
   funcs.reduceRight((composed, f) => f(composed), arg);
 
-const resolveProvisionStateSelector = provisionStateSelector => {
+type Optional<T> = T | undefined;
+
+export interface State {
+  [key: string]: any;
+}
+export type ProvisionStateSelector = string | Function;
+type DomainStateSelector = ((state: State, domain: string) => Optional<State>);
+type ResolvedProvisionStateSelector = ((state: State) => State);
+type ResolveProvisionStateSelector = (
+  provisionStateSelector: ProvisionStateSelector,
+) => ResolvedProvisionStateSelector;
+
+const resolveProvisionStateSelector: ResolveProvisionStateSelector = (
+  provisionStateSelector: ProvisionStateSelector,
+) => (state: State) => {
   if (!provisionStateSelector) {
-    return state => state;
+    return state;
   }
-  if (typeof provisionStateSelector === 'string') {
-    const pathSteps = provisionStateSelector.split('.');
-    return state =>
-      pathSteps.reduce(
-        (stateInterim, key) => stateInterim && stateInterim[key],
-        state,
-      );
+  if (typeof provisionStateSelector === 'function') {
+    return provisionStateSelector(state);
   }
-  return provisionStateSelector;
+  return state[provisionStateSelector];
 };
+
+export interface Provision {
+  isComplete: boolean;
+  isPending: boolean;
+  error: Error;
+  fallback: any;
+  value: any;
+}
+
+export interface RequestParams {
+  query: string;
+  meta: {
+    domain: string;
+  };
+}
+
+type Requirements = any;
+
+type ICallbackProps = {
+  requirements: Requirements;
+  dispatch: Function;
+  provision: any;
+};
+
+const provideHocInternal = createProvider({
+  requireProvision: ({ requirements, dispatch }: ICallbackProps) =>
+    dispatch(createRequestAction(requirements)),
+  resolveProvision: ({ provision }: ICallbackProps) => (
+    console.log('h', provision), provision
+  ),
+  requirementsComparator: (
+    { query: queryA, meta: { domain: domainA } }: RequestParams,
+    { query: queryB, meta: { domain: domainB } }: RequestParams,
+  ) => domainA === domainB && queryA === queryB,
+});
+
+const resolveProvision = memoizeByLastArgs((domainState = {}) => ({
+  isComplete: requestSelectors.selectIsReady(domainState),
+  isPending: requestSelectors.selectIsPending(domainState),
+  error: requestSelectors.selectError(domainState),
+  fallback: requestSelectors.selectAvailableResult(domainState),
+  value: requestSelectors.selectRelevantResult(domainState),
+}));
+
+export interface ProviderOptions {
+  selectDomainState: DomainStateSelector;
+  provisionStateSelector?: ProvisionStateSelector;
+}
+
+type MapStateToRequirements = (state: State, props?: {}) => Requirements;
 
 export default ({
   selectDomainState,
   provisionStateSelector = 'provision',
-}) => {
+}: ProviderOptions) => {
   const selectProvisionState = resolveProvisionStateSelector(
     provisionStateSelector,
   );
-  const provideHocInternal = createProvider({
-    requireProvision: (requirements, { dispatch }) =>
-      dispatch(createRequestAction(requirements)),
-    resolveProvision: (requirements, { provision }) => provision,
-    shouldSpreadProvisionInWrapperProps: true,
-  });
-
   // returns "provide" high-order component, adapted for react-redux stack
-  return mapStateToRequirements => {
-    const mapStateToProps = (state, props) => {
+  return (mapStateToRequirements: MapStateToRequirements) => {
+    const mapStateToProps = (state: State, props?: {}) => {
       const requirements = mapStateToRequirements(state, props) || {};
-      const { meta: { domain } = {} } = requirements;
-
-      const domainState =
-        selectDomainState(selectProvisionState(state), domain) || {};
-      const provision = {
-        isComplete: requestSelectors.selectIsReady(domainState),
-        isPending: requestSelectors.selectIsPending(domainState),
-        error: requestSelectors.selectError(domainState),
-        fallback: requestSelectors.selectAvailableResult(domainState),
-        provision: requestSelectors.selectRelevantResult(domainState),
-      };
-
+      const { meta: { domain = '' } = {} } = requirements;
+      console.log(
+        resolveProvision(
+          selectDomainState(selectProvisionState(state), domain),
+        ),
+      );
       return {
         requirements,
-        provision,
+        provision: resolveProvision(
+          selectDomainState(selectProvisionState(state), domain),
+        ),
       };
     };
 
+    // react-redux perform optimization when props is not used in state calculation
+    // usage of props is determined through mapper func arity
     const actualMapStateToProps =
       mapStateToRequirements.length === 1
-        ? state => mapStateToProps(state)
+        ? (state: State) => mapStateToProps(state)
         : mapStateToProps;
 
-    return Component =>
+    return (WrappedComponent: any) =>
       compose(
         connect(actualMapStateToProps),
-        provideHocInternal(),
-      )(Component);
+        provideHocInternal,
+      )(WrappedComponent);
   };
 };

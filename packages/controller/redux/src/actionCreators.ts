@@ -1,12 +1,38 @@
 import { INITIATE_REQUEST, PROCESS_REQUEST } from './actionTypes';
 import * as consts from './consts';
+import {
+  Action,
+  RequestFailureAction,
+  RequestSuccessAction,
+  RequestAction,
+} from './types';
 
-export const createRequestAction = requirements => ({
+type ActionCreatorOptions = {
+  meta?: {};
+};
+type ActionCreator = (options: ActionCreatorOptions) => Action;
+
+type RequestActionCreator = (options: ActionCreatorOptions) => RequestAction;
+
+type FailureActionCreator = (
+  options: ActionCreatorOptions,
+  result: Error,
+) => RequestFailureAction;
+
+type SuccessActionCreator = (
+  options: ActionCreatorOptions,
+  result: any,
+) => RequestSuccessAction;
+
+export const createRequestAction: ActionCreator = requirements => ({
   type: INITIATE_REQUEST,
   payload: requirements,
 });
 
-export const createPendingAction = ({ meta, ...requirements } = {}) => ({
+export const createPendingAction: RequestActionCreator = ({
+  meta,
+  ...requirements
+} = {}) => ({
   type: PROCESS_REQUEST,
   meta: {
     ...meta,
@@ -15,7 +41,10 @@ export const createPendingAction = ({ meta, ...requirements } = {}) => ({
   },
 });
 
-export const createFailureAction = ({ meta, ...requirements } = {}, error) => ({
+export const createFailureAction: FailureActionCreator = (
+  { meta, ...requirements } = {},
+  error,
+) => ({
   type: PROCESS_REQUEST,
   payload: error,
   error: true,
@@ -26,7 +55,7 @@ export const createFailureAction = ({ meta, ...requirements } = {}, error) => ({
   },
 });
 
-export const createSuccessAction = (
+export const createSuccessAction: SuccessActionCreator = (
   { meta, ...requirements } = {},
   result,
 ) => ({
