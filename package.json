@@ -3,12 +3,10 @@
     "access": "public"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "prewatch": "npm run bootstrap",
-    "watch": "lerna run --parallel watch",
+    "watch": "lerna bootstrap && lerna run --parallel watch",
     "start": "npm run watch",
-    "prebuild": "tsc && npm run bootstrap",
     "build": "lerna run --parallel build",
+    "build:typings": "lerna run --parallel build:typings",
     "prettier": "prettier --write 'packages/**/src/**'",
     "test": "rimraf coverage && NODE_ENV=test jest"
   },

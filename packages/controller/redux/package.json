@@ -3,12 +3,14 @@
   "version": "0.2.0",
   "description": "redux implementation of request controller: initialize requests and manage their state",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "clean": "rimraf lib",
     "test": "jest",
     "build": "rollup -c --environment PACKAGE_NAME:$npm_package_name",
+    "build:typings": "tsc",
     "watch": "rollup -c -w --environment PACKAGE_NAME:$npm_package_name",
-    "prepare": "npm run clean && npm run build"
+    "prepare": "npm run clean && npm run build:typings && npm run build"
   },
   "files": [
     "lib",

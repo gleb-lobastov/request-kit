@@ -3,12 +3,14 @@
   "version": "0.2.1",
   "description": "react high order component, bound with redux, to process request and provide data to component",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "clean": "rimraf lib",
     "test": "jest",
     "build": "rollup -c --environment PACKAGE_NAME:$npm_package_name",
+    "build:typings": "tsc",
     "watch": "rollup -c -w --environment PACKAGE_NAME:$npm_package_name",
-    "prepare": "npm run clean && npm run build"
+    "prepare": "npm run clean && npm run build:typings && npm run build"
   },
   "files": [
     "lib",
@@ -34,8 +36,9 @@
     "access": "public"
   },
   "devDependencies": {
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1",
+    "@types/react-redux": "^7.0.0",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.7.1",
     "glob": "^7.1.2",
     "jest-enzyme": "^7.0.1",
     "promise.prototype.finally": "^3.1.0",

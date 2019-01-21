@@ -1,19 +1,16 @@
 {
   "compilerOptions": {
-    "noEmit": true,
-    "allowJs": true,
+    "baseUrl": "./node_modules",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
     "jsx": "react",
-    "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "isolatedModules": true,
+    "preserveSymlinks": true,
     "rootDir": "./",
-    "baseUrl": "./",
-    "paths": {
-      "*": ["node_modules", "packages"]
-    }
+    "strict": true,
+    "target": "esnext"
   },
-  "include": ["packages/**/src/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["./**/node_modules"]
 }
