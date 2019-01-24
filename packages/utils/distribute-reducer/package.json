@@ -11,7 +11,7 @@
     "test": "jest",
     "build": "rollup -c --environment PACKAGE_NAME:$npm_package_name",
     "build:typings": "tsc",
-    "watch": "rollup -c -w --environment PACKAGE_NAME:$npm_package_name",
+    "watch": "tsc -w & rollup -c -w --environment PACKAGE_NAME:$npm_package_name",
     "prepare": "npm run clean && npm run build:typings && npm run build"
   },
   "files": [
