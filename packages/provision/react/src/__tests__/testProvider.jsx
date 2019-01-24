@@ -20,7 +20,7 @@ beforeEach(() => {
   });
 });
 
-describe('Provider', () => {
+describe('Provider without fulfilledRequirements', () => {
   it('should render wrapped component', () => {
     const WrappedComponent = provide(Presenter);
     expect(
@@ -71,5 +71,54 @@ describe('Provider', () => {
       <WrappedComponent requirements="does not matter" />,
     ).props();
     expect(props).toEqual(expect.objectContaining({ provision: PROVISION }));
+  });
+});
+
+describe('Provider with fulfilledRequirements', () => {
+  it('should require provision on mount if requirements is not equal fulfilledRequirements', () => {
+    const WrappedComponent = provide(Presenter);
+    const fulfilledRequirements = 'fulfilledRequirements';
+    const requirements = 'requirements';
+    shallow(
+      <WrappedComponent
+        fulfilledRequirements={fulfilledRequirements}
+        requirements={requirements}
+      />,
+    );
+    expect(requireProvision.mock.calls).toEqual([
+      [expect.objectContaining({ requirements })],
+    ]);
+  });
+
+  it('should not require provision on mounts if requirements is equal fulfilledRequirements', () => {
+    const WrappedComponent = provide(Presenter);
+    const fulfilledRequirements = 'fulfilledRequirements';
+    shallow(
+      <WrappedComponent
+        fulfilledRequirements={fulfilledRequirements}
+        requirements={fulfilledRequirements}
+      />,
+    );
+    expect(requireProvision.mock.calls).toHaveLength(0);
+  });
+
+  it('should require provision on update if nextRequirements is equal fulfilledRequirements, but not equal to prevRequirements', () => {
+    const WrappedComponent = provide(Presenter);
+    const fulfilledRequirements = 'fulfilledRequirements';
+    const requirements = 'requirements';
+    const instance = shallow(
+      <WrappedComponent
+        fulfilledRequirements={fulfilledRequirements}
+        requirements={requirements}
+      />,
+    );
+    instance.setProps({
+      fulfilledRequirements,
+      requirements: fulfilledRequirements,
+    });
+    expect(requireProvision.mock.calls).toEqual([
+      [expect.objectContaining({ requirements })],
+      [expect.objectContaining({ fulfilledRequirements })],
+    ]);
   });
 });

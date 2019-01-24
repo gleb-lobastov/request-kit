@@ -11,6 +11,7 @@ interface IRequirementsProps {
 }
 
 interface IConsumedProps extends IRequirementsProps {
+  fulfilledRequirements: TRequirements;
   onRequest?: (request: Promise<any>) => void;
 }
 
@@ -53,12 +54,15 @@ export default <ICallbackProps extends IRequirementsProps>({
       'WrappedComponent'})`;
 
     componentDidMount(): void {
-      this.require();
+      const { fulfilledRequirements, requirements } = this.props;
+      if (!requirementsComparator(fulfilledRequirements, requirements)) {
+        this.require();
+      }
     }
 
     componentDidUpdate(prevProps: IInputProps): void {
       const { requirements: prevRequirements } = prevProps;
-      const { requirements: nextRequirements, provision } = this.props;
+      const { requirements: nextRequirements } = this.props;
 
       if (!requirementsComparator(prevRequirements, nextRequirements)) {
         this.require();
