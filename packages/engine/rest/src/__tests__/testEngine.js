@@ -1,5 +1,5 @@
 import createRequestEngine, { requestConsts } from '../index.ts';
-import endpointResolver from '../test/plugins/endpointResolver';
+import endpointResolver from '../plugins/endpointResolver';
 
 beforeEach(() => {
   window.fetch.resetMocks();
