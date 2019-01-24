@@ -3,7 +3,7 @@ import {
   createRequestMiddleware,
   createRequestReducer,
 } from '@request-kit/controller-redux';
-import createProviderHOC, { State } from './createProviderHOC';
+import createConnectedProvider, { State } from './createConnectedProvider';
 
 interface IntegrationOptions {
   engine: any;
@@ -29,7 +29,7 @@ export default ({
 
   return {
     middleware: createRequestMiddleware({ engine }),
-    provide: createProviderHOC({ selectDomainState: selector }),
+    provide: createConnectedProvider({ selectDomainState: selector }),
     reducer: reduce,
   };
 };
