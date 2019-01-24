@@ -39,14 +39,34 @@ type ICallbackProps = {
   provision: any;
 };
 
+const requirementsComparator = (
+  requirementsA: RequestParams,
+  requirementsB: RequestParams,
+) => {
+  if (!requirementsA && !requirementsB) {
+    return true;
+  }
+  if (Boolean(requirementsA) !== Boolean(requirementsB)) {
+    return false;
+  }
+
+  const {
+    query: queryA,
+    meta: { domain: domainA },
+  } = requirementsA;
+  const {
+    query: queryB,
+    meta: { domain: domainB },
+  } = requirementsB;
+
+  return domainA === domainB && queryA === queryB;
+};
+
 const provideHocInternal = createProvider({
   requireProvision: ({ requirements, dispatch }: ICallbackProps) =>
     dispatch(createRequestAction(requirements)),
   resolveProvision: ({ provision }: ICallbackProps) => provision,
-  requirementsComparator: (
-    { query: queryA, meta: { domain: domainA } }: RequestParams,
-    { query: queryB, meta: { domain: domainB } }: RequestParams,
-  ) => domainA === domainB && queryA === queryB,
+  requirementsComparator,
 });
 
 const selectProvision = memoizeByLastArgs((domainState = {}) => ({
@@ -67,9 +87,13 @@ export default ({ selectDomainState }: ProviderOptions) => (
   mapStateToRequirements: MapStateToRequirements,
 ) => {
   const mapStateToProps = (state: State, props?: {}) => {
+    const fulfilledRequirements = requestSelectors.selectIsFulfilled(state)
+      ? requestSelectors.selectRequirements(state)
+      : null;
     const requirements = mapStateToRequirements(state, props) || {};
     const { meta: { domain = '' } = {} } = requirements;
     return {
+      fulfilledRequirements,
       requirements,
       provision: selectProvision(selectDomainState(state, domain)),
     };
