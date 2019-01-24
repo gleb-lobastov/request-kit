@@ -59,7 +59,7 @@ export default <ICallbackProps extends IRequirementsProps>({
     componentDidUpdate(prevProps: IInputProps): void {
       const { requirements: prevRequirements } = prevProps;
       const { requirements: nextRequirements, provision } = this.props;
-      console.log('cdu', provision);
+
       if (!requirementsComparator(prevRequirements, nextRequirements)) {
         this.require();
       }
@@ -68,7 +68,7 @@ export default <ICallbackProps extends IRequirementsProps>({
     require(): void {
       const { onRequest: handleRequest } = this.props;
       const response = requireProvision(this.props);
-      response.then(r => console.log({ r }));
+
       if (handleRequest) {
         handleRequest(response);
       }
