@@ -19,13 +19,18 @@ export default (/* further configuration */) => (
     return state;
   }
 
-  const { payload, error, meta: { readyState = undefined } = {} } = action;
+  const {
+    payload,
+    error,
+    meta: { readyState = undefined, requirements = undefined } = {},
+  } = action;
 
   if (readyState === consts.READY_STATE.OPENED) {
     return {
       ...state,
       readyState,
       recent: {},
+      requirements,
     };
   }
   if (readyState === consts.READY_STATE.DONE) {

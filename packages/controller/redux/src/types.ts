@@ -15,25 +15,24 @@ export interface InitiateRequestAction extends Action {
 }
 
 export interface RequestAction extends Action {
-  meta: { readyState: ReadyState };
+  meta: { readyState: ReadyState; requirements: any };
   payload?: Payload;
   error?: boolean;
 }
 
 export interface RequestSuccessAction extends RequestAction {
-  meta: { readyState: ReadyState };
   payload: Payload;
   error?: false;
 }
 
 export interface RequestFailureAction extends RequestAction {
-  meta: { readyState: ReadyState };
   payload: Error;
   error: true;
 }
 
 export interface State {
+  lastSuccessful?: SuccessResultState;
   readyState?: ReadyState;
   recent?: ResultState;
-  lastSuccessful?: SuccessResultState;
+  requirements?: any;
 }

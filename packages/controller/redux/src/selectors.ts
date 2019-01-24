@@ -12,6 +12,8 @@ type Optional<T> = T | undefined;
 const checkHasProperty = (object: object, property: string): boolean =>
   Object.prototype.hasOwnProperty.call(object, property);
 
+export const selectRequirements = (state: State): any => state.requirements;
+
 export const selectReadyState = (state: State): ReadyState =>
   state.readyState || consts.READY_STATE.UNSENT;
 
@@ -50,3 +52,6 @@ export const selectError = (state: State): Optional<Error> => {
   }
   return (<FailureResultState>state.recent).error;
 };
+
+export const selectIsFulfilled = (state: State): boolean =>
+  Boolean(selectAvailableResult(state) || selectError(state));
