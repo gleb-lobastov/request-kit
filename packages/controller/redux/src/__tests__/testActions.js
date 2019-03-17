@@ -5,15 +5,10 @@ import { PROCESS_REQUEST } from '../actionTypes';
 import { READY_STATE } from '../consts';
 
 const reduxMiddleware = createRequestMiddleware({
-  engine: {
-    preset() {
-      return this;
-    },
-    request: ({ response }) =>
-      response instanceof Error
-        ? Promise.reject(response)
-        : Promise.resolve(response),
-  },
+  requestHandler: ({ response }) =>
+    response instanceof Error
+      ? Promise.reject(response)
+      : Promise.resolve(response),
 });
 const mockStore = configureStore([reduxMiddleware]);
 

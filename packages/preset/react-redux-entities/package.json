@@ -1,0 +1,73 @@
+{
+  "name": "@request-kit/preset-react-redux-entities",
+  "version": "0.0.0",
+  "description": "react high order component, bound with redux, to process request and provide data to component",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "clean": "rimraf lib",
+    "test": "jest",
+    "build": "rollup -c --environment PACKAGE_NAME:$npm_package_name",
+    "build:typings": "tsc",
+    "watch": "tsc -w & rollup -c -w --environment PACKAGE_NAME:$npm_package_name",
+    "prepare": "npm run clean && npm run build:typings && npm run build"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gleb-lobastov/request-kit.git"
+  },
+  "keywords": [
+    "redux",
+    "request",
+    "data",
+    "state"
+  ],
+  "author": "Gleb Lobastov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gleb-lobastov/request-kit/issues"
+  },
+  "homepage": "https://github.com/gleb-lobastov/request-kit#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "jest": "^23.0.6",
+    "jest-enzyme": "^7.0.1",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.1.2"
+  },
+  "dependencies": {
+    "@request-kit/distribute-reducer": "^0.3.0",
+    "@request-kit/engine-rest": "^0.3.0",
+    "@request-kit/intg-react-redux": "^0.0.0",
+    "@request-kit/intg-redux-model-normalized": "^0.0.0",
+    "@request-kit/provision-react": "^0.3.0",
+    "redux": "^4.0.0",
+    "shallowequal": "^1.0.2"
+  },
+  "jest": {
+    "globals": {
+      "IS_PRODUCTION_ENV": false
+    },
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json",
+      "ts",
+      "tsx"
+    ],
+    "setupTestFrameworkScriptFile": "jest-enzyme/lib/index.js",
+    "setupFiles": [
+      "./test/setupEnzyme.js",
+      "./test/promiseShim.js"
+    ],
+    "transform": {
+      "^.+\\.[jt]sx?$": "babel-jest"
+    }
+  }
+}

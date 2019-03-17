@@ -1,11 +1,21 @@
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { mount } from 'enzyme';
 import configureRequestKit from '../index.ts';
 
+Enzyme.configure({ adapter: new Adapter() });
+
 const CLASS_NAME = 'CLASS_NAME';
-const getResponse = require => `response for: ${require}`;
+const getResponse = (modelName, id) =>
+  ({
+    books: {
+      10: { id: 10, authorId: 20 },
+      12: { id: 12, authorId: 30 },
+    },
+  }[modelName][id]);
 const domain = 'some.deep.path';
 const mapStateToRequirements = (_, { query }) => ({
   query,
@@ -14,35 +24,51 @@ const mapStateToRequirements = (_, { query }) => ({
   },
 });
 
-let requestKit;
 let store;
 let ProvisionedComponent;
+let booksModelDefinition;
 beforeEach(() => {
-  requestKit = configureRequestKit({
-    engine: {
-      preset() {
-        return this;
-      },
-      request: ({ query }) =>
+  booksModelDefinition = {
+    modelName: 'books',
+    toClientAdapter: ({ id: bookId, author_id: authorId }) => ({
+      bookId,
+      authorId,
+    }),
+    endpointResolver: ({ query: { id } }) => `api/books/${id}`,
+  };
+  const { reducer, reduxMiddleware, provide } = configureRequestKit({
+    requestEngineConfig: {
+      fetchHandler: ({ modelName, query, query: { id } }) =>
         query instanceof Error
           ? Promise.reject(query)
-          : Promise.resolve({ receive: getResponse(query) }),
+          : Promise.resolve({ receive: getResponse(modelName, id) }),
     },
-    provisionStateSelector: state => state,
+    modelsConfig: {
+      modelsDefinitions: [booksModelDefinition],
+    },
   });
 
   store = createStore(
-    requestKit.reducer,
-    applyMiddleware(requestKit.middleware),
+    combineReducers({ requestKit: reducer }),
+    applyMiddleware(reduxMiddleware),
   );
-
   const Presenter = () => <div className={CLASS_NAME} />;
-  ProvisionedComponent = requestKit.provide(mapStateToRequirements)(Presenter);
+  ProvisionedComponent = provide(mapStateToRequirements)(Presenter);
 });
 
 describe('provide integration', () => {
   it('should indicate pending state after request is initiated', () => {
-    const query = 'query';
+    const query = {
+      meta: {
+        domain: 'test',
+      },
+      request: {
+        modelName: booksModelDefinition.modelName,
+        query: {
+          id: 10,
+        },
+      },
+    };
     const instance = mount(
       <Provider store={store}>
         <ProvisionedComponent query={query} />,
@@ -65,7 +91,17 @@ describe('provide integration', () => {
 
   it('should receive provision after request is fulfilled', async () => {
     expect.assertions(1);
-    const query = 'query';
+    const query = {
+      meta: {
+        domain: 'test',
+      },
+      request: {
+        modelName: booksModelDefinition.modelName,
+        query: {
+          id: 10,
+        },
+      },
+    };
     const requestFulfilmentPromise = new Promise(resolve => {
       const instance = mount(
         <Provider store={store}>
@@ -77,14 +113,12 @@ describe('provide integration', () => {
       );
     });
     const instance = await requestFulfilmentPromise;
-    await new Promise(r => setTimeout(r, 500));
     const presenter = instance
       .update()
       .children()
       .children()
       .children();
 
-    console.log(presenter.props());
     expect(presenter.props().provision).toEqual({
       value: { receive: getResponse(query) },
       fallback: { receive: getResponse(query) },
@@ -99,8 +133,28 @@ describe('provide integration', () => {
     const renderProvisionedComponent = props => (
       <ProvisionedComponent {...props} />
     );
-    const queryA = 'queryA';
-    const queryB = 'queryB';
+    const queryA = {
+      meta: {
+        domain: 'test',
+      },
+      request: {
+        modelName: booksModelDefinition.modelName,
+        query: {
+          id: 10,
+        },
+      },
+    };
+    const queryB = {
+      meta: {
+        domain: 'test',
+      },
+      request: {
+        modelName: booksModelDefinition.modelName,
+        query: {
+          id: 12,
+        },
+      },
+    };
     const requestState = { isFirstRequest: true };
     const requestFulfilmentPromise = new Promise(resolve => {
       let instance;

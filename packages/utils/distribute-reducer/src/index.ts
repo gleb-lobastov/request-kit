@@ -1,20 +1,9 @@
-/**
- * remove prior to v1.0.0
- * @deprecated use DistributorOptions instead
- */
-export interface PrevDistributorOptionsFormat {
-  domainSeparator?: string; // DistributorOptions.pathPartitionsSeparator
-  domainProperty?: string | DomainPathResolver; // DistributorOptions.pathProperty
-  reducer: TargetReducer; // DistributorOptions.targetReducer
-}
+type Optional<T> = T | undefined;
 
 export interface DistributorOptions {
   pathPartitionsSeparator?: string;
   pathProperty?: string | DomainPathResolver;
-  targetReducer: TargetReducer;
 }
-
-type Optional<T> = T | undefined;
 
 // State and a action is "bypass" props and not allowed to be disclosed inside this lib
 export interface ForwardedState {}
@@ -65,22 +54,14 @@ const getNestedDomain = (domain: Optional<Domain>, pathPartition: string) => {
 class Distributor {
   pathPartitionsSeparator: string;
   resolveDomainPath: DomainPathResolver;
-  targetReducer: TargetReducer;
 
   constructor(options: DistributorOptions) {
     const {
       pathPartitionsSeparator = consts.PATH_PARTITIONS_SEPARATOR,
       pathProperty = consts.DEFAULT_PATH,
-      targetReducer,
     } = options;
 
     this.pathPartitionsSeparator = pathPartitionsSeparator;
-    if (typeof targetReducer !== 'function') {
-      throw new Error(
-        `invalid option targetReducer is specified "${targetReducer}", expected function`,
-      );
-    }
-    this.targetReducer = targetReducer;
 
     if (typeof pathProperty === 'function') {
       this.resolveDomainPath = pathProperty;
@@ -149,7 +130,11 @@ class Distributor {
     );
   }
 
-  reduce(prevRootDomain: Optional<State> = {}, action: ForwardedAction) {
+  reduce(
+    prevRootDomain: Optional<State> = {},
+    action: ForwardedAction,
+    targetReducer: TargetReducer,
+  ) {
     const domainPath = this.resolveDomainPath(action);
     if (!domainPath) {
       return prevRootDomain;
@@ -172,7 +157,7 @@ class Distributor {
       windowOfNextState = windowOfNextState.domains[pathPartition];
       windowOfPrevState = movedWindowOfPrevState;
     }
-    windowOfNextState.domainState = this.targetReducer(
+    windowOfNextState.domainState = targetReducer(
       windowOfNextState.domainState,
       action,
     );
@@ -186,16 +171,17 @@ class Distributor {
   }
 }
 
-const createDistributeReducer = (options: PrevDistributorOptionsFormat) => {
-  const { domainSeparator, domainProperty, reducer } = options;
+const createDistributor = (options: DistributorOptions = {}) => {
+  const { pathPartitionsSeparator, pathProperty } = options;
   const distributor = new Distributor({
-    pathPartitionsSeparator: domainSeparator,
-    pathProperty: domainProperty,
-    targetReducer: reducer,
+    pathPartitionsSeparator,
+    pathProperty,
   });
   return {
-    reduce: (state: State, action: ForwardedAction) =>
-      distributor.reduce(state, action),
+    distributeReducer: (targetReducer: TargetReducer) => (
+      state: State,
+      action: ForwardedAction,
+    ) => distributor.reduce(state, action, targetReducer),
     selectDomainState: (state: State, domainPath: string) =>
       distributor.selectDomainState(state, domainPath),
     selectDomainStates: (state: State, domainPath: string) =>
@@ -203,5 +189,5 @@ const createDistributeReducer = (options: PrevDistributorOptionsFormat) => {
   };
 };
 
-createDistributeReducer.consts = consts;
-export default createDistributeReducer;
+createDistributor.consts = consts;
+export default createDistributor;

@@ -36,3 +36,7 @@ export interface State {
   recent?: ResultState;
   requirements?: any;
 }
+
+export interface ReducerConfig {
+  transformResult?: (payload: any) => any;
+}

@@ -18,6 +18,15 @@ export interface EngineConfiguration {
   presetOptions?: Options;
 }
 
+const globalFetch =
+  typeof fetch === 'undefined'
+    ? () => {
+        throw new Error(
+          'Global fetch api is not present in environment. You can provide own fetch method, using fetchHandler option',
+        );
+      }
+    : fetch;
+
 const compose = (...fns: Function[]) => (params: any) =>
   fns.reduceRight((composed, fn) => fn(composed), params);
 
@@ -43,12 +52,14 @@ class RequestEngine {
   constructor(configuration: EngineConfiguration = {}) {
     this.configuration = configuration;
     const {
-      fetchHandler = fetch,
+      fetchHandler = globalFetch,
       fetchAdapter,
       plugins = [],
     } = this.configuration;
     const actualFetchAdapter =
-      !fetchAdapter && fetchHandler === fetch ? defaultFetchAdapter : null;
+      !fetchAdapter || fetchHandler === globalFetch
+        ? defaultFetchAdapter
+        : null;
     const actualPlugins = actualFetchAdapter
       ? [...plugins, actualFetchAdapter]
       : plugins;

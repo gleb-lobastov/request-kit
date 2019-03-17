@@ -3,9 +3,10 @@
     "access": "public"
   },
   "scripts": {
-    "watch": "lerna bootstrap && lerna run --parallel watch",
+    "watch": "lerna bootstrap --hoist && lerna run --parallel watch",
     "start": "npm run watch",
     "build": "lerna run --parallel build",
+    "prebuild": "npm run build:typings",
     "build:typings": "lerna run --parallel build:typings",
     "prettier": "prettier --write 'packages/**/src/**'",
     "test": "rimraf coverage && NODE_ENV=test jest"
@@ -18,11 +19,16 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.1.0",
+    "@babel/preset-typescript": "^7.3.3",
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.1",
     "@commitlint/config-lerna-scopes": "^7.0.0",
     "@types/jest": "^23.3.11",
+    "@types/react": "^16.4.0",
+    "@types/react-dom": "^16.0.6",
+    "@types/react-redux": "^7.0.3",
+    "@typescript-eslint/eslint-plugin": "^1.4.2",
+    "@typescript-eslint/parser": "^1.4.2",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
@@ -34,11 +40,11 @@
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.12.3",
     "husky": "^1.0.0-rc.13",
-    "jest": "^23.6.0",
-    "lerna": "^2.11.0",
+    "jest": "^23.0.6",
+    "lerna": "^3.13.1",
     "lint-staged": "^8.1.0",
     "prettier": "^1.12.1",
-    "rollup": "^1.1.1",
+    "rollup": "^1.1.2",
     "rollup-plugin-babel": "^4.2.0",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-replace": "^2.0.0",
@@ -63,6 +69,13 @@
     "globals": {
       "IS_PRODUCTION_ENV": false
     },
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json",
+      "ts",
+      "tsx"
+    ],
     "projects": [
       "<rootDir>/packages/*/*"
     ],

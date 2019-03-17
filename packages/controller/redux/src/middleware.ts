@@ -6,16 +6,30 @@ import {
 } from './actionCreators';
 import { Action, InitiateRequestAction } from './types';
 
-type Engine = {
-  request: (requirements: object) => Promise<any>;
-};
+export interface State {}
 
 export interface Store {
   dispatch: (action: Action) => any;
+  getState: () => State;
 }
 
-interface ControllerOptions {
-  engine: Engine;
+export interface Requirements {}
+export interface Result {}
+
+export interface Strategy {
+  (
+    requirements: Requirements,
+    dispatch: (action: Action) => any,
+    getState: () => State,
+  ): Promise<any>;
+}
+export interface ControllerOptions {
+  requestHandler: (
+    requirements: Requirements,
+    dispatch?: (action: Action) => any,
+    getState?: () => State,
+  ) => Promise<Result>;
+  strategyEnhancer?: (defaultStrategy: Strategy) => Strategy;
 }
 
 function checkIsInitiateRequestAction(
@@ -28,20 +42,33 @@ function checkIsInitiateRequestAction(
   );
 }
 
-export default ({ engine }: ControllerOptions) => (store: Store) => (
-  next: Function,
-) => (action: Action) => {
-  if (!checkIsInitiateRequestAction(action)) {
-    return next(action);
-  }
+const strategyCreator = (requestHandler: (...args: any[]) => Promise<any>) => (
+  requirements: object,
+  dispatch: (action: Action) => any,
+  getState: () => object,
+) => {
+  dispatch(createPendingAction(requirements));
+  const response = requestHandler(requirements, dispatch, getState);
+  response.then(
+    result => dispatch(createSuccessAction(requirements, result)),
+    error => dispatch(createFailureAction(requirements, error)),
+  );
+  return response;
+};
 
-  const { payload: requirements = {} } = action;
+const identity = (value: any) => value;
 
-  store.dispatch(createPendingAction(requirements));
-  return engine
-    .request(requirements)
-    .then(
-      result => store.dispatch(createSuccessAction(requirements, result)),
-      error => store.dispatch(createFailureAction(requirements, error)),
-    );
+export default ({
+  requestHandler,
+  strategyEnhancer = identity,
+}: ControllerOptions) => {
+  const strategy = strategyEnhancer(strategyCreator(requestHandler));
+  return (store: Store) => (next: Function) => (action: Action) => {
+    console.log({ action });
+    if (!checkIsInitiateRequestAction(action)) {
+      return next(action);
+    }
+    const { payload: requirements = {} } = action;
+    return strategy(requirements, store.dispatch, store.getState);
+  };
 };

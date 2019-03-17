@@ -1,10 +1,12 @@
 {
-  "lerna": "2.11.0",
+  "lerna": "3.10.0",
   "version": "independent",
   "packages": [
     "packages/controller/*",
     "packages/engine/*",
     "packages/integration/*",
+    "packages/model/*",
+    "packages/preset/*",
     "packages/provision/*",
     "packages/utils/*"
   ]

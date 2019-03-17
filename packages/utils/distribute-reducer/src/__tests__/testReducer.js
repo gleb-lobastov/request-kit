@@ -1,15 +1,18 @@
-import distributeReducerByDomain from '../index.ts';
+import createDistributor from '../index.ts';
 
-const { consts } = distributeReducerByDomain;
+const { consts } = createDistributor;
 const TEST_ACTION_TYPE = 'TEST_ACTION_TYPE';
+
+let distributor;
+beforeEach(() => {
+  distributor = createDistributor({});
+});
 
 describe('distribution', () => {
   it('should ignore action if no options for distributeReducerByDomain is present', () => {
     const state = {};
     const action = { type: TEST_ACTION_TYPE };
-    const reducer = distributeReducerByDomain({
-      reducer: () => ({}),
-    }).reduce;
+    const reducer = distributor.distributeReducer(() => ({}));
     expect(reducer(state, action)).toBe(state);
   });
 
@@ -20,9 +23,7 @@ describe('distribution', () => {
       type: TEST_ACTION_TYPE,
       meta: { domain },
     };
-    const reducer = distributeReducerByDomain({
-      reducer: () => ({ isReduced: true }),
-    }).reduce;
+    const reducer = distributor.distributeReducer(() => ({ isReduced: true }));
     expect(reducer(prevState, action)).toEqual({
       domains: {
         [domain]: {
@@ -44,9 +45,7 @@ describe('distribution', () => {
         ),
       },
     };
-    const reducer = distributeReducerByDomain({
-      reducer: () => ({ isReduced: true }),
-    }).reduce;
+    const reducer = distributor.distributeReducer(() => ({ isReduced: true }));
     expect(reducer(prevState, action)).toEqual({
       domains: {
         [requestDomain]: {
@@ -70,9 +69,10 @@ describe('distribution', () => {
       type: TEST_ACTION_TYPE,
       meta: { domain },
     };
-    const reducer = distributeReducerByDomain({
-      reducer: state => ({ isReduced: true, prevState: state }),
-    }).reduce;
+    const reducer = distributor.distributeReducer(state => ({
+      isReduced: true,
+      prevState: state,
+    }));
     expect(
       reducer(prevState, action).domains[domain].domainState.prevState,
     ).toBe(prevDomainState);
@@ -85,9 +85,7 @@ describe('distribution', () => {
       type: TEST_ACTION_TYPE,
       meta: { domain },
     };
-    const reducer = distributeReducerByDomain({
-      reducer: state => state,
-    }).reduce;
+    const reducer = distributor.distributeReducer(state => state);
     expect(reducer(prevState, action)).toBe(prevState);
   });
 });

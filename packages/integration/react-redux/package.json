@@ -1,6 +1,6 @@
 {
-  "name": "@request-kit/react-redux",
-  "version": "0.3.0",
+  "name": "@request-kit/intg-react-redux",
+  "version": "0.0.0",
   "description": "react high order component, bound with redux, to process request and provide data to component",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -36,15 +36,17 @@
     "access": "public"
   },
   "devDependencies": {
-    "@types/react-redux": "^7.0.0",
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-16": "^1.7.1",
     "glob": "^7.1.2",
+    "jest": "^23.0.6",
     "jest-enzyme": "^7.0.1",
     "promise.prototype.finally": "^3.1.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
-    "redux-mock-store": "^1.5.1"
+    "redux-mock-store": "^1.5.1",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.1.2"
   },
   "dependencies": {
     "@request-kit/controller-redux": "^0.3.0",
@@ -65,7 +67,7 @@
       "ts",
       "tsx"
     ],
-    "setupTestFrameworkScriptFile": "./node_modules/jest-enzyme/lib/index.js",
+    "setupTestFrameworkScriptFile": "jest-enzyme/lib/index.js",
     "setupFiles": [
       "./test/setupEnzyme.js",
       "./test/promiseShim.js"

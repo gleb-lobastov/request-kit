@@ -1,8 +1,9 @@
+import '../test/patchFetch'
 import createRequestEngine, { requestConsts } from '../index.ts';
 import endpointResolver from '../plugins/endpointResolver';
 
 beforeEach(() => {
-  window.fetch.resetMocks();
+  fetch.resetMocks();
 });
 
 describe('configuration', () => {
@@ -18,7 +19,7 @@ describe('configuration', () => {
         method: requestConsts.METHOD.GET,
         endpoint: '/',
       });
-      expect(window.fetch.mock.calls[0][1].method).toBe('get');
+      expect(fetch.mock.calls[0][1].method).toBe('get');
     });
 
     it('should send request with specified method (post)', () => {
@@ -26,7 +27,7 @@ describe('configuration', () => {
         method: requestConsts.METHOD.POST,
         endpoint: '/',
       });
-      expect(window.fetch.mock.calls[0][1].method).toBe('post');
+      expect(fetch.mock.calls[0][1].method).toBe('post');
     });
 
     it('should send request with specified method (put)', () => {
@@ -34,7 +35,7 @@ describe('configuration', () => {
         method: requestConsts.METHOD.PUT,
         endpoint: '/',
       });
-      expect(window.fetch.mock.calls[0][1].method).toBe('put');
+      expect(fetch.mock.calls[0][1].method).toBe('put');
     });
 
     it('should send request with specified method (patch)', () => {
@@ -42,7 +43,7 @@ describe('configuration', () => {
         method: requestConsts.METHOD.PATCH,
         endpoint: '/',
       });
-      expect(window.fetch.mock.calls[0][1].method).toBe('patch');
+      expect(fetch.mock.calls[0][1].method).toBe('patch');
     });
 
     it('should send request with specified method (delete)', () => {
@@ -50,7 +51,7 @@ describe('configuration', () => {
         method: requestConsts.METHOD.DELETE,
         endpoint: '/',
       });
-      expect(window.fetch.mock.calls[0][1].method).toBe('delete');
+      expect(fetch.mock.calls[0][1].method).toBe('delete');
     });
 
     it('should send request with specified method (head)', () => {
@@ -58,7 +59,7 @@ describe('configuration', () => {
         method: requestConsts.METHOD.HEAD,
         endpoint: '/',
       });
-      expect(window.fetch.mock.calls[0][1].method).toBe('head');
+      expect(fetch.mock.calls[0][1].method).toBe('head');
     });
 
     it('should send request with specified method (options)', () => {
@@ -66,7 +67,7 @@ describe('configuration', () => {
         method: requestConsts.METHOD.OPTIONS,
         endpoint: '/',
       });
-      expect(window.fetch.mock.calls[0][1].method).toBe('options');
+      expect(fetch.mock.calls[0][1].method).toBe('options');
     });
   });
 
@@ -81,7 +82,7 @@ describe('configuration', () => {
       requestEngine.request({
         endpoint: '/test',
       });
-      expect(window.fetch.mock.calls[0][0]).toBe('/test');
+      expect(fetch.mock.calls[0][0]).toBe('/test');
     });
 
     it('should resolve endpoint with request params, if endpoint option is function', () => {
@@ -89,7 +90,7 @@ describe('configuration', () => {
         endpoint: ({ method }) => `/${method}/test`,
         method: requestConsts.METHOD.GET,
       });
-      expect(window.fetch.mock.calls[0][0]).toBe(
+      expect(fetch.mock.calls[0][0]).toBe(
         `/${requestConsts.METHOD.GET}/test`,
       );
     });
@@ -125,7 +126,7 @@ describe('configuration', () => {
 
     it('should be composed in order that specified in configuration', () => {
       requestEngine.request({ endpoint: '/' });
-      expect(window.fetch.mock.calls[0][1]).toEqual(
+      expect(fetch.mock.calls[0][1]).toEqual(
         expect.objectContaining({
           isPluginACalled: true,
           isPluginBCalled: true,
@@ -142,7 +143,7 @@ describe('fetch presets', () => {
     const requestEngine = createRequestEngine();
     const requestPreset = requestEngine.preset({ presetParam });
     requestPreset.request({ endpoint: '/' });
-    const requestParams = window.fetch.mock.calls[0][1];
+    const requestParams = fetch.mock.calls[0][1];
     expect(requestParams).toEqual(expect.objectContaining({ presetParam }));
   });
   it('should chain preset calls', () => {
@@ -153,7 +154,7 @@ describe('fetch presets', () => {
       .preset({ presetParam1 })
       .preset({ presetParam2 });
     requestPreset.request({ endpoint: '/' });
-    const requestParams = window.fetch.mock.calls[0][1];
+    const requestParams = fetch.mock.calls[0][1];
     expect(requestParams).toEqual(
       expect.objectContaining({ presetParam1, presetParam2 }),
     );
@@ -176,7 +177,7 @@ describe('fetch presets', () => {
       sharedParam: sharedParamFromRequest,
       endpoint: '/',
     });
-    const requestParams = window.fetch.mock.calls[0][1];
+    const requestParams = fetch.mock.calls[0][1];
     expect(requestParams).toEqual(
       expect.objectContaining({
         presetParam,
@@ -204,7 +205,7 @@ describe('fetch presets', () => {
         sharedHeader: sharedHeaderFromRequest,
       },
     });
-    const requestHeaders = window.fetch.mock.calls[0][1];
+    const requestHeaders = fetch.mock.calls[0][1];
     expect(requestHeaders).toEqual(
       expect.objectContaining({
         headers: expect.objectContaining({
@@ -234,7 +235,7 @@ describe('fetch presets', () => {
         sharedDeepParam: sharedDeepParamFromRequest,
       },
     });
-    const requestDeepParams = window.fetch.mock.calls[0][1];
+    const requestDeepParams = fetch.mock.calls[0][1];
     expect(requestDeepParams.deepParams.presetDeepParam).toBeUndefined();
   });
 });

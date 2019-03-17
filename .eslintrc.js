@@ -27,13 +27,13 @@ module.exports = {
     'jest/globals': true,
   },
   parserOptions: {
-    ecmaVersion: 6,
+    ecmaVersion: 2018,
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
     },
   },
-  parser: 'babel-eslint',
+  parser: '@typescript-eslint/parser',
   plugins: ['import', 'react', 'jest'],
   root: true,
   overrides: getPackageJsonPathsList().map(packageJsonPath => ({

@@ -42,5 +42,10 @@
     "transform": {
       "^.+\\.[jt]sx?$": "babel-jest"
     }
+  },
+  "devDependencies": {
+    "jest": "^23.0.6",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.1.2"
   }
 }
