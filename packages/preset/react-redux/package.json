@@ -36,10 +36,8 @@
     "access": "public"
   },
   "devDependencies": {
-    "jest": "^23.0.6",
-    "jest-enzyme": "^7.0.1",
-    "rimraf": "^2.6.3",
-    "rollup": "^1.1.2"
+    "jest-enzyme": "^7.1.0",
+    "redux": "^4.0.0"
   },
   "dependencies": {
     "@request-kit/controller-redux": "^0.3.0",
@@ -47,7 +45,6 @@
     "@request-kit/engine-rest": "^0.3.0",
     "@request-kit/intg-react-redux": "^0.0.0",
     "@request-kit/provision-react": "^0.3.0",
-    "redux": "^4.0.0",
     "shallowequal": "^1.0.2"
   },
   "jest": {

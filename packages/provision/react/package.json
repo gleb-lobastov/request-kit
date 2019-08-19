@@ -36,7 +36,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
+  "peerDependencies": {
     "prop-types": "^15.6.2",
     "react": "^16.4.0",
     "react-dom": "^16.4.0"
@@ -45,10 +45,7 @@
     "deep-equal": "^1.0.1",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "jest": "^23.0.6",
-    "jest-enzyme": "^6.0.1",
-    "rimraf": "^2.6.3",
-    "rollup": "^1.1.2"
+    "jest-enzyme": "^7.1.0"
   },
   "jest": {
     "globals": {

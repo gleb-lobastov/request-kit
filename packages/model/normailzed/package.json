@@ -50,12 +50,7 @@
       "^.+\\.[jt]sx?$": "babel-jest"
     }
   },
-  "devDependencies": {
-    "jest": "^23.0.6",
-    "rimraf": "^2.6.3",
-    "rollup": "^1.1.2"
-  },
   "dependencies": {
-    "normalizr": "^3.3.0"
+    "normalizr": "^3.4.1"
   }
 }

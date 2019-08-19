@@ -36,10 +36,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "jest": "^23.0.6",
-    "redux-mock-store": "^1.5.1",
-    "rimraf": "^2.6.3",
-    "rollup": "^1.1.2"
+    "redux-mock-store": "^1.5.3"
   },
   "jest": {
     "globals": {
