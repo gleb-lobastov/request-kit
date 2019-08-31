@@ -1,0 +1,34 @@
+{
+  "name": "@request-kit/multiple-request",
+  "version": "0.0.1",
+  "description": "react high order component API to request and provide data. Not for direct usage, use @request-kit/react-redux instead",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "rimraf lib",
+    "test": "jest",
+    "build": "rollup -c --environment PACKAGE_NAME:$npm_package_name",
+    "build:typings": "echo \"skip typings\"",
+    "watch": "rollup -c -w --environment PACKAGE_NAME:$npm_package_name",
+    "prepare": "npm run clean && npm run build:typings && npm run build"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gleb-lobastov/request-kit.git"
+  },
+  "keywords": [
+    "request"
+  ],
+  "author": "Gleb Lobastov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gleb-lobastov/request-kit/issues"
+  },
+  "homepage": "https://github.com/gleb-lobastov/request-kit#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}
