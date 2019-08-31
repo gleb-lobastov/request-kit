@@ -51,38 +51,6 @@
     "rollup-plugin-uglify": "^6.0.2",
     "typescript": "^3.5.3"
   },
-  "jest": {
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!**/__tests__/**"
-    ],
-    "coverageDirectory": "<rootDir>/coverage",
-    "coverageThreshold": {
-      "global": {
-        "branches": 70,
-        "functions": 85,
-        "lines": 85,
-        "statements": 85
-      }
-    },
-    "globals": {
-      "IS_PRODUCTION_ENV": false
-    },
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "json",
-      "ts",
-      "tsx"
-    ],
-    "projects": [
-      "<rootDir>/packages/*/*"
-    ],
-    "transform": {
-      "^.+\\.[jt]sx?$": "babel-jest"
-    }
-  },
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all"
@@ -99,5 +67,10 @@
       "npm run prettier",
       "git add"
     ]
+  },
+  "dependencies": {
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "jest-enzyme": "^7.1.0"
   }
 }
