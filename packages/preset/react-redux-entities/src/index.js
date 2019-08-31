@@ -9,12 +9,12 @@ import createReactReduxIntegration, {
 } from '@request-kit/intg-react-redux';
 import createReduxModelIntegration from '@request-kit/intg-redux-model-normalized';
 import {
-  multiRequestEnhancer,
-  multiProvisionSelector,
-  multiProvisionAdapter,
-  multiCheckIsRequirementsChanged,
+  multipleRequestEnhancer,
+  multipleProvisionSelector,
+  multipleProvisionAdapter,
+  multipleCheckIsRequirementsChanged,
   mergeProvisionState,
-} from '@request-kit/multiple-request';
+} from '@request-kit/util-multiple-request';
 import createRequestHandler from '@request-kit/request-default';
 
 const STATE_PATHS = { ENTITIES: 'entities', PROVISION: 'provision' };
@@ -45,7 +45,7 @@ export default ({
 
   const provisionSelector = (state, requirements) => {
     const provisionState = selectProvision(state);
-    const provision = multiProvisionSelector(
+    const provision = multipleProvisionSelector(
       provisionState,
       requirements,
       (domainComplexState, domain) =>
@@ -57,7 +57,7 @@ export default ({
     const { value, fallback } = provision;
     return {
       provision,
-      ...multiProvisionAdapter({
+      ...multipleProvisionAdapter({
         originalAdapter: denormalize,
         provisionValues:
           noFallback || typeof value !== 'undefined' ? value : fallback,
@@ -74,7 +74,7 @@ export default ({
     createMiddleware: createReduxMiddleware,
     provide,
   } = createReactReduxIntegration({
-    requirementsComparator: multiCheckIsRequirementsChanged,
+    requirementsComparator: multipleCheckIsRequirementsChanged,
     provisionSelector,
     stateSelector: (state, domain) =>
       selectDomainState(selectProvision(state), domain, {
@@ -83,7 +83,7 @@ export default ({
   });
 
   const requestStrategy = compose(
-    multiRequestEnhancer,
+    multipleRequestEnhancer,
     provisionStrategyEnhancer,
     modelsStrategyEnhancer,
   )(requestHandler);

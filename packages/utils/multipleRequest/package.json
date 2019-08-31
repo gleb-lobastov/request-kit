@@ -1,5 +1,5 @@
 {
-  "name": "@request-kit/multiple-request",
+  "name": "@request-kit/util-multiple-request",
   "version": "0.0.1",
   "description": "react high order component API to request and provide data. Not for direct usage, use @request-kit/react-redux instead",
   "main": "lib/index.js",
