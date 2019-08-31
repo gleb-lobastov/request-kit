@@ -40,31 +40,11 @@
     "redux": "^4.0.0"
   },
   "dependencies": {
-    "@request-kit/distribute-reducer": "^0.3.0",
+    "distribute-reducer": "^1.0.0",
     "@request-kit/engine-rest": "^0.3.0",
     "@request-kit/intg-react-redux": "^0.0.0",
     "@request-kit/intg-redux-model-normalized": "^0.0.0",
     "@request-kit/provision-react": "^0.3.0",
     "shallowequal": "^1.0.2"
-  },
-  "jest": {
-    "globals": {
-      "IS_PRODUCTION_ENV": false
-    },
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "json",
-      "ts",
-      "tsx"
-    ],
-    "setupTestFrameworkScriptFile": "jest-enzyme/lib/index.js",
-    "setupFiles": [
-      "./test/setupEnzyme.js",
-      "./test/promiseShim.js"
-    ],
-    "transform": {
-      "^.+\\.[jt]sx?$": "babel-jest"
-    }
   }
 }

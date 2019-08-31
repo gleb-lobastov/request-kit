@@ -43,21 +43,5 @@
   "dependencies": {
     "@request-kit/controller-redux": "^0.3.0",
     "@request-kit/model-normalized": "^0.0.0"
-  },
-  "jest": {
-    "globals": {
-      "IS_PRODUCTION_ENV": false
-    },
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "json",
-      "ts",
-      "tsx"
-    ],
-    "setupTestFrameworkScriptFile": "jest-enzyme/lib/index.js",
-    "transform": {
-      "^.+\\.[jt]sx?$": "babel-jest"
-    }
   }
 }
