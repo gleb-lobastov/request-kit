@@ -4,7 +4,6 @@ import commonjs from 'rollup-plugin-commonjs';
 
 // use process.env.PACKAGE_NAME to make package-specific configuration
 const PACKAGES = {
-  ENGINE_REST: '@request-kit/engine-rest',
   CONTROLLER_REDUX: '@request-kit/controller-redux',
   PROVIDER_REACT: '@request-kit/provider-react',
   INTEGRATION_REACT_REDUX: '@request-kit/intg-react-redux',
