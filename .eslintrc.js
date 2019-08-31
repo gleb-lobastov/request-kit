@@ -49,6 +49,11 @@ module.exports = {
     },
   })),
   rules: {
+    'lines-between-class-members': [
+      'error',
+      'always',
+      { exceptAfterSingleLine: true },
+    ],
     'import/no-extraneous-dependencies': [
       'error',
       {
