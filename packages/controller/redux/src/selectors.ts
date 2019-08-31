@@ -1,57 +1,45 @@
-import * as consts from './consts';
-import {
-  State,
-  ReadyState,
-  Result,
-  SuccessResultState,
-  FailureResultState,
-} from './types';
+import { READY_STATE, EMPTY_STATE } from './consts';
+import { TRequestState } from './interface'; // eslint-disable-line no-unused-vars
 
-type Optional<T> = T | undefined;
+export const selectReadyState = <TResponse>({
+  readyState,
+}: TRequestState<TResponse> = EMPTY_STATE) => readyState || READY_STATE.UNSENT;
 
-const checkHasProperty = (object: object, property: string): boolean =>
-  Object.prototype.hasOwnProperty.call(object, property);
+export const selectIsUnsent = <TResponse>(
+  state: TRequestState<TResponse> = EMPTY_STATE,
+) => selectReadyState(state) === READY_STATE.UNSENT;
 
-export const selectRequirements = (state: State): any => state.requirements;
+export const selectIsReady = <TResponse>(
+  state: TRequestState<TResponse> = EMPTY_STATE,
+) => selectReadyState(state) === READY_STATE.DONE;
 
-export const selectReadyState = (state: State): ReadyState =>
-  state.readyState || consts.READY_STATE.UNSENT;
+export const selectIsPending = <TResponse>(
+  state: TRequestState<TResponse> = EMPTY_STATE,
+) => !selectIsReady(state) && !selectIsUnsent(state);
 
-export const selectIsReady = (state: State): boolean =>
-  state.readyState === consts.READY_STATE.DONE;
+export const selectIsValid = <TResponse>({
+  isValid,
+}: TRequestState<TResponse> = EMPTY_STATE) => isValid;
+export const selectIsError = <TResponse>({
+  isError,
+}: TRequestState<TResponse> = EMPTY_STATE) => isError;
 
-export const selectIsPending = (state: State): boolean =>
-  !selectIsReady(state) && state.readyState !== consts.READY_STATE.UNSENT;
+export const selectResult = <TResponse>({
+  isValid,
+  isError,
+  lastResult,
+}: TRequestState<TResponse> = EMPTY_STATE) =>
+  isValid && !isError ? lastResult : undefined;
 
-export const selectRelevantResult = (state: State): Optional<Result> => {
-  if (!state || !state.recent || !checkHasProperty(state.recent, 'result')) {
-    return undefined;
-  }
-  return (<SuccessResultState>state.recent).result;
-};
+export const selectPlaceholder = <TResponse>({
+  lastResult,
+}: TRequestState<TResponse> = EMPTY_STATE) => lastResult;
 
-export const selectAvailableResult = (state: State): Optional<Result> => {
-  if (!state) {
-    return undefined;
-  }
-  if (state.recent && checkHasProperty(state.recent, 'result')) {
-    return (<SuccessResultState>state.recent).result;
-  }
-  if (
-    state.lastSuccessful &&
-    checkHasProperty(state.lastSuccessful, 'result')
-  ) {
-    return state.lastSuccessful.result;
-  }
-  return undefined;
-};
+export const selectError = <TResponse>({
+  isError,
+  lastError,
+}: TRequestState<TResponse> = EMPTY_STATE) => (isError ? lastError : undefined);
 
-export const selectError = (state: State): Optional<Error> => {
-  if (!state || !state.recent || !checkHasProperty(state.recent, 'error')) {
-    return undefined;
-  }
-  return (<FailureResultState>state.recent).error;
-};
-
-export const selectIsFulfilled = (state: State): boolean =>
-  Boolean(selectAvailableResult(state) || selectError(state));
+export const selectLastError = <TResponse>({
+  lastError,
+}: TRequestState<TResponse> = EMPTY_STATE) => lastError;

@@ -1,14 +1,21 @@
-import * as requestSelectors from './selectors';
-import { State, Strategy } from './middleware';
-import { Action } from './types';
-
-export { default as createRequestMiddleware } from './middleware';
-export { createRequestAction } from './actionCreators';
-export { default as createRequestReducer } from './reducer';
-export { requestSelectors };
+export { default as createMiddleware } from './middleware';
+export { default as strategyEnhancer } from './strategyEnhancer';
+export { default as createReducer } from './reducer';
+export {
+  selectError,
+  selectIsError,
+  selectIsPending,
+  selectIsReady,
+  selectIsUnsent,
+  selectIsValid,
+  selectLastError,
+  selectPlaceholder,
+  selectReadyState,
+  selectResult,
+} from './selectors';
+export {
+  createRequestAction,
+  createInvalidateRequestAction,
+} from './actionCreators';
 export { PROCESS_REQUEST as processRequestActionType } from './actionTypes';
-
-// workaround for https://github.com/babel/babel/issues/8361
-export interface State extends State {}
-export interface Strategy extends Strategy {}
-export interface Action extends Action {}
+export { READY_STATE, EMPTY_STATE } from './consts';

@@ -1,14 +1,26 @@
 import configureStore from 'redux-mock-store';
 import createRequestMiddleware from '../middleware';
+import strategyEnhancer from '../strategyEnhancer';
 import { createRequestAction } from '../actionCreators';
 import { PROCESS_REQUEST } from '../actionTypes';
 import { READY_STATE } from '../consts';
+import { TRequestStrategy } from '../interface'; // eslint-disable no-unused-vars
+
+type TTestResponse = Error | string;
+
+interface TTestRequirements {
+  readonly response: TTestResponse;
+}
+
+const requestStrategy: TRequestStrategy<TTestRequirements, TTestResponse> = ({
+  response,
+}) =>
+  response instanceof Error
+    ? Promise.reject(response)
+    : Promise.resolve(response);
 
 const reduxMiddleware = createRequestMiddleware({
-  requestHandler: ({ response }) =>
-    response instanceof Error
-      ? Promise.reject(response)
-      : Promise.resolve(response),
+  requestStrategy: strategyEnhancer(requestStrategy),
 });
 const mockStore = configureStore([reduxMiddleware]);
 
@@ -25,18 +37,18 @@ describe('redux actions produced by request middleware', () => {
     const actions = store.getActions();
     const pendingAction = {
       type: PROCESS_REQUEST,
-      meta: expect.objectContaining({
-        requirements,
+      meta: {
+        ...requirements,
         readyState: READY_STATE.OPENED,
-      }),
+      },
     };
     const successAction = {
       type: PROCESS_REQUEST,
       payload: response,
-      meta: expect.objectContaining({
-        requirements,
+      meta: {
+        ...requirements,
         readyState: READY_STATE.DONE,
-      }),
+      },
     };
 
     expect(actions).toEqual([pendingAction, successAction]);
@@ -54,19 +66,19 @@ describe('redux actions produced by request middleware', () => {
     const actions = store.getActions();
     const pendingAction = {
       type: PROCESS_REQUEST,
-      meta: expect.objectContaining({
-        requirements,
+      meta: {
+        ...requirements,
         readyState: READY_STATE.OPENED,
-      }),
+      },
     };
     const failureAction = {
       type: PROCESS_REQUEST,
       payload: error,
       error: true,
-      meta: expect.objectContaining({
-        requirements,
+      meta: {
+        ...requirements,
         readyState: READY_STATE.DONE,
-      }),
+      },
     };
 
     expect(actions).toEqual([pendingAction, failureAction]);

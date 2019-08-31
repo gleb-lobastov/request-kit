@@ -1,52 +1,57 @@
-import { PROCESS_REQUEST } from './actionTypes';
-import * as consts from './consts';
-import { State, Action, RequestAction } from './types';
+import {
+  checkIsInvalidateRequestAction,
+  checkIsRequestAction,
+  checkIsRequestSuccessAction,
+  checkIsRequestFailureAction,
+} from './actionTypes';
+import { EMPTY_STATE, READY_STATE } from './consts';
+// eslint-disable-next-line no-unused-vars
+import { TAction, TRequestState } from './interface';
 
-const checkIsRequestAction = (
-  action: Action | RequestAction,
-): action is RequestAction => {
-  const { type: actionType } = action;
-  return (
-    (<RequestAction>action).meta !== undefined && actionType === PROCESS_REQUEST
-  );
-};
+export default (/* further configuration */) => <TResponse>(
+  state: TRequestState<TResponse> = EMPTY_STATE,
+  action: TAction,
+): TRequestState<TResponse> => {
+  if (checkIsInvalidateRequestAction(action)) {
+    return {
+      ...state,
+      isValid: false,
+    };
+  }
 
-export default (/* further configuration */) => (
-  state: State = {},
-  action: Action,
-) => {
   if (!checkIsRequestAction(action)) {
     return state;
   }
 
-  const {
-    payload,
-    error,
-    meta: { readyState = undefined, requirements = undefined } = {},
-  } = action;
+  const { meta: { readyState = undefined } = {} } = action;
 
-  if (readyState === consts.READY_STATE.OPENED) {
+  if (readyState === READY_STATE.OPENED) {
     return {
       ...state,
       readyState,
-      recent: {},
-      requirements,
     };
   }
-  if (readyState === consts.READY_STATE.DONE) {
-    if (error) {
+  if (readyState === READY_STATE.DONE) {
+    if (checkIsRequestFailureAction(action)) {
+      const { payload } = action;
       return {
         ...state,
         readyState,
-        recent: { error: payload },
+        lastError: payload,
+        isError: true,
+        // isValid: true?
       };
     }
-    return {
-      ...state,
-      readyState,
-      recent: { result: payload },
-      lastSuccessful: { result: payload },
-    };
+    if (checkIsRequestSuccessAction<{}, TResponse>(action)) {
+      const { payload } = action;
+      return {
+        ...state,
+        readyState,
+        lastResult: payload,
+        isError: false,
+        isValid: true,
+      };
+    }
   }
   return state;
 };

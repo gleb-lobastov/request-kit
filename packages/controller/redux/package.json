@@ -34,23 +34,5 @@
   "homepage": "https://github.com/gleb-lobastov/request-kit#readme",
   "publishConfig": {
     "access": "public"
-  },
-  "devDependencies": {
-    "redux-mock-store": "^1.5.3"
-  },
-  "jest": {
-    "globals": {
-      "IS_PRODUCTION_ENV": false
-    },
-    "transform": {
-      "^.+\\.[jt]sx?$": "babel-jest"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "json",
-      "ts",
-      "tsx"
-    ]
   }
 }
