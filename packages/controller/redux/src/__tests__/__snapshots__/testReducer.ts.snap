@@ -1,0 +1,247 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`request reducer should match invalidateAction 1`] = `
+Object {
+  "isError": false,
+  "isValid": false,
+  "readyState": 0,
+}
+`;
+
+exports[`request reducer should match pendingAction, failureAction, invalidateAction 1`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "readyState": 1,
+}
+`;
+
+exports[`request reducer should match pendingAction, failureAction, invalidateAction 2`] = `
+Object {
+  "isError": true,
+  "isValid": true,
+  "lastError": [Error: =(],
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, failureAction, invalidateAction 3`] = `
+Object {
+  "isError": true,
+  "isValid": false,
+  "lastError": [Error: =(],
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, failureAction, pendingAction, failureAction 1`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "readyState": 1,
+}
+`;
+
+exports[`request reducer should match pendingAction, failureAction, pendingAction, failureAction 2`] = `
+Object {
+  "isError": true,
+  "isValid": true,
+  "lastError": [Error: =(],
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, failureAction, pendingAction, failureAction 3`] = `
+Object {
+  "isError": true,
+  "isValid": true,
+  "lastError": [Error: =(],
+  "readyState": 1,
+}
+`;
+
+exports[`request reducer should match pendingAction, failureAction, pendingAction, failureAction 4`] = `
+Object {
+  "isError": true,
+  "isValid": true,
+  "lastError": [Error: =(],
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, failureAction, pendingAction, successAction 1`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "readyState": 1,
+}
+`;
+
+exports[`request reducer should match pendingAction, failureAction, pendingAction, successAction 2`] = `
+Object {
+  "isError": true,
+  "isValid": true,
+  "lastError": [Error: =(],
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, failureAction, pendingAction, successAction 3`] = `
+Object {
+  "isError": true,
+  "isValid": true,
+  "lastError": [Error: =(],
+  "readyState": 1,
+}
+`;
+
+exports[`request reducer should match pendingAction, failureAction, pendingAction, successAction 4`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "lastError": [Error: =(],
+  "lastResult": "result",
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, invalidateAction 1`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "readyState": 1,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, invalidateAction 2`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "lastResult": "result",
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, invalidateAction 3`] = `
+Object {
+  "isError": false,
+  "isValid": false,
+  "lastResult": "result",
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, invalidateAction, pendingAction, successAction 1`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "readyState": 1,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, invalidateAction, pendingAction, successAction 2`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "lastResult": "result",
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, invalidateAction, pendingAction, successAction 3`] = `
+Object {
+  "isError": false,
+  "isValid": false,
+  "lastResult": "result",
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, invalidateAction, pendingAction, successAction 4`] = `
+Object {
+  "isError": false,
+  "isValid": false,
+  "lastResult": "result",
+  "readyState": 1,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, invalidateAction, pendingAction, successAction 5`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "lastResult": "result",
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, pendingAction, failureAction 1`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "readyState": 1,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, pendingAction, failureAction 2`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "lastResult": "result",
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, pendingAction, failureAction 3`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "lastResult": "result",
+  "readyState": 1,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, pendingAction, failureAction 4`] = `
+Object {
+  "isError": true,
+  "isValid": true,
+  "lastError": [Error: =(],
+  "lastResult": "result",
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, pendingAction, successAction 1`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "readyState": 1,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, pendingAction, successAction 2`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "lastResult": "result",
+  "readyState": 4,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, pendingAction, successAction 3`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "lastResult": "result",
+  "readyState": 1,
+}
+`;
+
+exports[`request reducer should match pendingAction, successAction, pendingAction, successAction 4`] = `
+Object {
+  "isError": false,
+  "isValid": true,
+  "lastResult": "result",
+  "readyState": 4,
+}
+`;

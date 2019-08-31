@@ -1,95 +1,77 @@
-import { READY_STATE } from '../consts';
-import { PROCESS_REQUEST } from '../actionTypes';
 import createRequestReducer from '../reducer';
-import { TRequestState, TAction } from '../interface'; // eslint-disable no-unused-vars
+import {
+  createFailureAction,
+  createInvalidateRequestAction,
+  createPendingAction,
+  createSuccessAction,
+} from '../actionCreators';
+import { EMPTY_STATE } from '../consts';
+import { TRequestState, TAction } from '../interface'; // eslint-disable-line no-unused-vars
 
-let requestReducer: <TResponse>(
-  state: TRequestState<TResponse>,
+type TTestResponse = void;
+let requestReducer: (
+  state: TRequestState<TTestResponse>,
   action: TAction,
-) => TRequestState<TResponse>;
+) => TRequestState<TTestResponse>;
 beforeEach(() => {
   requestReducer = createRequestReducer();
 });
 
-describe('basic request reducers', () => {
-  describe('pending action', () => {
-    it('should set ready state to open and discard recent values, but not lastSuccessful', () => {
-      const lastError = new Error('ha-ha');
-      const lastResult = 'Fallback to me';
-      const successAction = {
-        type: PROCESS_REQUEST,
-        meta: { readyState: READY_STATE.OPENED },
-      };
-      const prevState = {
-        isError: true,
-        isValid: true,
-        lastError,
-        lastResult,
-        readyState: READY_STATE.DONE,
-      };
+const requirements = {};
+const pendingAction = createPendingAction(requirements);
+const failureAction = createFailureAction(requirements, new Error('=('));
+const successAction = createSuccessAction(requirements, 'result');
+const invalidateAction = createInvalidateRequestAction(requirements);
+const unrelatedAction = { type: 'unrelated' };
 
-      expect(requestReducer(prevState, successAction)).toEqual(
-        expect.objectContaining({
-          isError: true,
-          isValid: true,
-          lastError,
-          lastResult,
-          readyState: READY_STATE.OPENED,
-        }),
-      );
-    });
+const match = (...actions: Array<TAction>) => {
+  let state = EMPTY_STATE;
+  return actions.forEach(action => {
+    state = requestReducer(state, action);
+    expect(state).toMatchSnapshot();
+  });
+};
+describe('request reducer', () => {
+  it('should match empty state', () => {
+    // @ts-ignore check for state initial request
+    expect(requestReducer(undefined, unrelatedAction)).toEqual(EMPTY_STATE);
   });
 
-  describe('succeed action', () => {
-    it('should set done state and fulfill both recent and lastSuccessful sections', () => {
-      const result = 'amazing awesome thing, that you expected to see';
-      const lastResult = 'old but not useless';
-      const successAction = {
-        type: PROCESS_REQUEST,
-        payload: result,
-        meta: { readyState: READY_STATE.DONE },
-      };
-      const prevState = {
-        isError: false,
-        isValid: false,
-        lastResult,
-        readyState: READY_STATE.OPENED,
-      };
-
-      expect(requestReducer(prevState, successAction)).toEqual({
-        isError: false,
-        isValid: true,
-        lastResult: result,
-        readyState: READY_STATE.DONE,
-      });
-    });
+  it('should match pendingAction, successAction, invalidateAction', () => {
+    match(pendingAction, successAction, invalidateAction);
   });
 
-  describe('failure action', () => {
-    it('should set done state and fulfill error both in ongoing and fulfilled sections', () => {
-      const lastError = new Error('All gone!');
-      const lastResult = 'cute kittens';
-      const prevState = {
-        isError: false,
-        isValid: true,
-        lastResult,
-        readyState: READY_STATE.OPENED,
-      };
+  it('should match pendingAction, failureAction, invalidateAction', () => {
+    match(pendingAction, failureAction, invalidateAction);
+  });
 
-      const failureAction = {
-        type: PROCESS_REQUEST,
-        payload: lastError,
-        error: true,
-        meta: { readyState: READY_STATE.DONE },
-      };
+  it('should match invalidateAction', () => {
+    match(invalidateAction);
+  });
 
-      expect(requestReducer(prevState, failureAction)).toEqual({
-        isError: true,
-        isValid: true,
-        lastError,
-        lastResult,
-        readyState: READY_STATE.DONE,
-      });
-    });
+  it('should match pendingAction, failureAction, pendingAction, failureAction', () => {
+    match(pendingAction, failureAction, pendingAction, failureAction);
+  });
+
+  it('should match pendingAction, failureAction, pendingAction, successAction', () => {
+    match(pendingAction, failureAction, pendingAction, successAction);
+  });
+
+  it('should match pendingAction, successAction, pendingAction, failureAction', () => {
+    match(pendingAction, successAction, pendingAction, failureAction);
+  });
+
+  it('should match pendingAction, successAction, pendingAction, successAction', () => {
+    match(pendingAction, successAction, pendingAction, successAction);
+  });
+
+  it('should match pendingAction, successAction, invalidateAction, pendingAction, successAction', () => {
+    match(
+      pendingAction,
+      successAction,
+      invalidateAction,
+      pendingAction,
+      successAction,
+    );
   });
 });

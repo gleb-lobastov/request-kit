@@ -4,7 +4,7 @@ import strategyEnhancer from '../strategyEnhancer';
 import { createRequestAction } from '../actionCreators';
 import { PROCESS_REQUEST } from '../actionTypes';
 import { READY_STATE } from '../consts';
-import { TRequestStrategy } from '../interface'; // eslint-disable no-unused-vars
+import { TRequestStrategy } from '../interface'; // eslint-disable-line no-unused-vars
 
 type TTestResponse = Error | string;
 

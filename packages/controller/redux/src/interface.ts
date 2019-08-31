@@ -51,6 +51,13 @@ export interface TRequestAction<TRequirements extends {}, TResponse>
   error?: boolean;
 }
 
+export interface TRequestPendingAction<TRequirements extends {}>
+  extends TRequestAction<TRequirements, never> {
+  meta: TRequestMeta & TRequirements;
+  payload?: never;
+  error?: never;
+}
+
 export interface TRequestSuccessAction<TRequirements extends {}, TResponse>
   extends TRequestAction<TRequirements, TResponse> {
   payload: TResponse;

@@ -1,166 +1,145 @@
 import {
   selectError,
+  selectIsError,
   selectIsPending,
   selectIsReady,
+  selectIsUnsent,
+  selectIsValid,
+  selectLastError,
   selectPlaceholder,
   selectReadyState,
   selectResult,
 } from '../selectors';
 import { READY_STATE, EMPTY_STATE } from '../consts';
+import { TRequestState } from '../interface'; // eslint-disable-line no-unused-vars
 
 type TTestResponse = Error | string;
+interface TReadyStateCheckSelector {
+  (state: TRequestState<TTestResponse>): boolean;
+}
+interface TTestReadyStateOptions {
+  testCaseName: string;
+  mapping: { [key: string]: boolean };
+  selector: TReadyStateCheckSelector;
+}
 
-describe('selectors', () => {
+describe('ready state selectors', () => {
+  const eachReadyState = ({
+    testCaseName,
+    mapping,
+    selector,
+  }: TTestReadyStateOptions) =>
+    Object.entries(mapping).forEach(([strReadyState, expectedValue]) => {
+      it(`should select is request in ${testCaseName} state (${strReadyState})`, () => {
+        const readyState = Number(strReadyState);
+        expect(selector({ ...EMPTY_STATE, readyState })).toBe(expectedValue);
+      });
+    });
+
+  eachReadyState({
+    testCaseName: 'unsent',
+    mapping: {
+      [READY_STATE.UNSENT]: true,
+      [READY_STATE.OPENED]: false,
+      [READY_STATE.HEADERS_RECEIVED]: false,
+      [READY_STATE.LOADING]: false,
+      [READY_STATE.DONE]: false,
+    },
+    selector: selectIsUnsent,
+  });
+
+  eachReadyState({
+    testCaseName: 'pending',
+    mapping: {
+      [READY_STATE.UNSENT]: false,
+      [READY_STATE.OPENED]: true,
+      [READY_STATE.HEADERS_RECEIVED]: true,
+      [READY_STATE.LOADING]: true,
+      [READY_STATE.DONE]: false,
+    },
+    selector: selectIsPending,
+  });
+
+  eachReadyState({
+    testCaseName: 'ready',
+    mapping: {
+      [READY_STATE.UNSENT]: false,
+      [READY_STATE.OPENED]: false,
+      [READY_STATE.HEADERS_RECEIVED]: false,
+      [READY_STATE.LOADING]: false,
+      [READY_STATE.DONE]: true,
+    },
+    selector: selectIsReady,
+  });
+
   it('should select request ready state', () => {
     const readyState = READY_STATE.HEADERS_RECEIVED; // whatever
     expect(
       selectReadyState<TTestResponse>({ ...EMPTY_STATE, readyState }),
     ).toBe(readyState);
   });
+});
 
-  const pendingStateMapping = {
-    [READY_STATE.UNSENT]: false,
-    [READY_STATE.OPENED]: true,
-    [READY_STATE.HEADERS_RECEIVED]: true,
-    [READY_STATE.LOADING]: true,
-    [READY_STATE.DONE]: false,
+describe('selectors', () => {
+  const LAST_RESULT = 'whatever';
+  const LAST_ERROR = new Error('=(');
+  const VALID_STATE = {
+    ...EMPTY_STATE,
+    lastResult: LAST_RESULT,
+    isValid: true,
   };
-  Object.entries(pendingStateMapping).forEach(
-    ([strReadyState, isPendingShouldBe]) => {
-      it(`should select is request in pending state (${strReadyState})`, () => {
-        const readyState = Number(strReadyState);
-        expect(
-          selectIsPending<TTestResponse>({ ...EMPTY_STATE, readyState }),
-        ).toBe(isPendingShouldBe);
-      });
-    },
-  );
-
-  const readyStateMapping = {
-    [READY_STATE.UNSENT]: false,
-    [READY_STATE.OPENED]: false,
-    [READY_STATE.HEADERS_RECEIVED]: false,
-    [READY_STATE.LOADING]: false,
-    [READY_STATE.DONE]: true,
+  const INVALID_STATE = {
+    ...EMPTY_STATE,
+    lastResult: LAST_RESULT,
+    isValid: false,
   };
-  Object.entries(readyStateMapping).forEach(
-    ([strReadyState, isReadyShouldBe]) => {
-      it(`should select is request in completed state (${strReadyState})`, () => {
-        const readyState = Number(strReadyState);
-        expect(
-          selectIsReady<TTestResponse>({
-            ...EMPTY_STATE,
-            readyState: readyState as READY_STATE,
-          }),
-        ).toBe(isReadyShouldBe);
-      });
-    },
-  );
+  const ERROR_STATE = {
+    ...EMPTY_STATE,
+    lastResult: LAST_RESULT,
+    isError: true,
+    lastError: LAST_ERROR,
+  };
 
-  it('should select available result (1)', () => {
-    const lastSuccessfulResult = 'whatever';
-    expect(
-      selectPlaceholder<TTestResponse>({
-        lastResult: lastSuccessfulResult,
-        isValid: false,
-        isError: false,
-        readyState: READY_STATE.DONE,
-      }),
-    ).toBe(lastSuccessfulResult);
+  it('should select valid result (1)', () => {
+    expect(selectIsValid<TTestResponse>(VALID_STATE)).toBe(true);
+    expect(selectResult<TTestResponse>(VALID_STATE)).toBe(LAST_RESULT);
   });
 
-  it('should select available result (2)', () => {
-    const lastSuccessfulResult = 'whatever';
-    expect(
-      selectPlaceholder<TTestResponse>({
-        lastError: new Error('Sorry, man'),
-        lastResult: lastSuccessfulResult,
-        isValid: false,
-        isError: true,
-        readyState: READY_STATE.DONE,
-      }),
-    ).toBe(lastSuccessfulResult);
+  it('should not select not valid result', () => {
+    expect(selectIsValid<TTestResponse>(INVALID_STATE)).toBe(false);
+    expect(selectResult<TTestResponse>(INVALID_STATE)).toBeUndefined();
   });
 
-  it('should select available result (3)', () => {
-    const recentResult = 'whatever';
-    expect(
-      selectPlaceholder<TTestResponse>({
-        lastResult: recentResult,
-        isValid: true,
-        isError: false,
-        readyState: READY_STATE.DONE,
-      }),
-    ).toBe(recentResult);
+  it('should not select result, if current state is error', () => {
+    expect(selectResult<TTestResponse>(ERROR_STATE)).toBeUndefined();
   });
 
-  it('should select only relevant result (1)', () => {
-    expect(
-      selectResult<TTestResponse>({
-        lastResult: 'lastSuccessfulResult',
-        isValid: false,
-        isError: false,
-        readyState: READY_STATE.DONE,
-      }),
-    ).toBeUndefined();
+  it('should select placeholder result', () => {
+    expect(selectPlaceholder<TTestResponse>(VALID_STATE)).toBe(LAST_RESULT);
   });
 
-  it('should select only relevant result (2)', () => {
-    expect(
-      selectResult<TTestResponse>({
-        lastError: new Error('Shit happens'),
-        lastResult: 'lastSuccessfulResult',
-        isValid: false,
-        isError: false,
-        readyState: READY_STATE.DONE,
-      }),
-    ).toBeUndefined();
+  it('should select placeholder result even in invalid state', () => {
+    expect(selectPlaceholder<TTestResponse>(INVALID_STATE)).toBe(LAST_RESULT);
   });
 
-  it('should select only relevant result (3)', () => {
-    const recentResult = 'whatever';
-    expect(
-      selectResult<TTestResponse>({
-        lastResult: recentResult,
-        isValid: true,
-        isError: false,
-        readyState: READY_STATE.DONE,
-      }),
-    ).toBe(recentResult);
+  it('should select placeholder result even in error state', () => {
+    expect(selectPlaceholder<TTestResponse>(ERROR_STATE)).toBe(LAST_RESULT);
   });
 
-  it('should select error if recent request failed (1)', () => {
-    expect(
-      selectError<TTestResponse>({
-        lastResult: 'lastSuccessfulResult',
-        isValid: false,
-        isError: false,
-        readyState: READY_STATE.DONE,
-      }),
-    ).toBeUndefined();
+  it('should select error if recent request failed', () => {
+    expect(selectIsError<TTestResponse>(ERROR_STATE)).toBe(true);
+    expect(selectError<TTestResponse>(ERROR_STATE)).toBe(LAST_ERROR);
   });
 
-  it('should select error if recent request failed (2)', () => {
-    const lastError = new Error('Slow down');
-    expect(
-      selectError<TTestResponse>({
-        lastError,
-        lastResult: 'lastSuccessfulResult',
-        isValid: false,
-        isError: true,
-        readyState: READY_STATE.DONE,
-      }),
-    ).toBe(lastError);
+  it('should not select error if recent request was successful', () => {
+    const state = { ...ERROR_STATE, ...VALID_STATE, isError: false };
+    expect(selectIsError<TTestResponse>(state)).toBe(false);
+    expect(selectError<TTestResponse>(state)).toBeUndefined();
   });
 
-  it('should select error if recent request failed (3)', () => {
-    expect(
-      selectError<TTestResponse>({
-        lastResult: 'recentResult',
-        isValid: true,
-        isError: false,
-        readyState: READY_STATE.DONE,
-      }),
-    ).toBeUndefined();
+  it('should select last error even if recent request was successful', () => {
+    const state = { ...ERROR_STATE, ...VALID_STATE, isError: false };
+    expect(selectIsError<TTestResponse>(state)).toBe(false);
+    expect(selectLastError(state)).toBe(LAST_ERROR);
   });
 });
