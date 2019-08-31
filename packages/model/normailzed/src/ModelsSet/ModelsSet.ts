@@ -1,41 +1,40 @@
-import Model from '../Model/Model';
+import Model from '../Model';
+/* eslint-disable no-unused-vars */
+import { TModelDefinitions, TModelsMap } from './ModelsSet.interface';
 import {
-  IModelRequest,
-  IModelResponse,
-  IModelDefinition,
-  IReferenceDeterminant,
-  IReferenceResolverCreatorConfig,
-} from '../Model';
-import { IModelsConfig, IModelsMap } from './ModelsSet.interface';
+  TModelResponse,
+  TReferenceResolverCreatorConfig,
+  TReferenceDeterminant,
+} from '../Model/Model.interface';
+import { TModelRequirements } from '../interface';
+/* eslint-enable no-unused-vars */
 
-export default class ModelsSet {
-  models: IModelsMap;
+export default class ModelsSet<TRequirements> {
+  models: TModelsMap;
 
-  constructor(modelsConfig: IModelsConfig) {
-    const { modelsDefinitions } = modelsConfig;
+  constructor(modelsDefinitions: TModelDefinitions) {
     // step-by-step definitions of model is required to provide references for existing schemas
     this.models = {};
     modelsDefinitions
       .filter(({ modelName }) => modelName)
-      .forEach(
-        (definition: IModelDefinition): void => {
-          this.models[definition.modelName] = new Model(
-            definition,
-            this.createReferenceResolver,
-          );
-        },
-      );
+      .forEach(definition => {
+        this.models[definition.modelName] = new Model<TRequirements>(
+          definition,
+          this.createReferenceResolver,
+        );
+      });
   }
 
   createReferenceResolver = ({
     defaultModel,
     itemSchema,
     derivedSchemas,
-  }: IReferenceResolverCreatorConfig = {}) => ({
+    isNoop = false, // to obtain non-nested schemas for denormalize
+  }: TReferenceResolverCreatorConfig = {}) => ({
     modelName = defaultModel,
     schemaName,
-  }: IReferenceDeterminant = {}) => {
-    if (!modelName) {
+  }: TReferenceDeterminant = {}) => {
+    if (!modelName || isNoop) {
       return undefined;
     }
     if (modelName === defaultModel) {
@@ -51,15 +50,15 @@ export default class ModelsSet {
       );
     }
     return schemaName
-      ? model.resolveSchemaByName(schemaName)
+      ? model.resolveSchemaByName(schemaName, false)
       : model.resolveEntitySchema();
   };
 
-  resolveByName(modelName: string) {
+  resolveByName(modelName: string): Model<TRequirements> {
     return this.models[modelName];
   }
 
-  requireByName(modelName: string) {
+  requireByName(modelName: string): Model<TRequirements> {
     const model = this.resolveByName(modelName);
     if (!model) {
       throw new Error(`Missing model for "${modelName}"`);
@@ -67,8 +66,11 @@ export default class ModelsSet {
     return model;
   }
 
-  normalize(request: IModelRequest, response: IModelResponse) {
-    const { modelName } = request;
+  normalize(
+    request: TModelRequirements<TRequirements>,
+    response: TModelResponse,
+  ) {
+    const { modelName = '' } = request;
     return this.requireByName(modelName).normalize(request, response);
   }
 }

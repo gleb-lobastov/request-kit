@@ -18,53 +18,51 @@ beforeEach(() => {
   const createListSchemaFromAnotherModelItemSchema = reference =>
     new schema.Array(reference({ modelName: 'referenceModel' }));
 
-  const modelsSet = new ModelsSet({
-    modelsDefinitions: [
-      {
-        modelName: 'referenceModel',
-        toClientAdapter: value => value,
-        endpointResolver: null,
-        derivedSchemas: [
-          {
-            schemaName: 'list',
-            schemaCreator: createListSchemaFromThisModelItemSchema,
-          },
-        ],
-      },
-      {
-        modelName: 'referencingModel',
-        // toServerAdapter: value => value,
-        toClientAdapter: value => value,
-        endpointResolver: null,
-        derivedSchemas: [
-          {
-            schemaName: 'list',
-            schemaCreator: createListSchemaFromThisModelItemSchema,
-          },
-          {
-            schemaName: 'objectWithList',
-            schemaCreator: createDerivedSchemaFromPreviouslyDefinedListSchema,
-          },
-          {
-            schemaName: 'referenceModelItem',
-            schemaCreator: referenceToItemSchemaOfAnotherModel,
-          },
-          {
-            schemaName: 'objectWithModelItem',
-            schemaCreator: createDerivedSchemaFromPreviouslyDefinedAnotherModelSchema,
-          },
-          {
-            schemaName: 'referenceModelList',
-            schemaCreator: referenceListSchemaFromAnotherModelItemSchema,
-          },
-          {
-            schemaName: 'customReferenceModelList',
-            schemaCreator: createListSchemaFromAnotherModelItemSchema,
-          },
-        ],
-      },
-    ],
-  });
+  const modelsSet = new ModelsSet([
+    {
+      modelName: 'referenceModel',
+      toClientAdapter: value => value,
+      endpointResolver: null,
+      derivedSchemas: [
+        {
+          schemaName: 'list',
+          schemaCreator: createListSchemaFromThisModelItemSchema,
+        },
+      ],
+    },
+    {
+      modelName: 'referencingModel',
+      // toServerAdapter: value => value,
+      toClientAdapter: value => value,
+      endpointResolver: null,
+      derivedSchemas: [
+        {
+          schemaName: 'list',
+          schemaCreator: createListSchemaFromThisModelItemSchema,
+        },
+        {
+          schemaName: 'objectWithList',
+          schemaCreator: createDerivedSchemaFromPreviouslyDefinedListSchema,
+        },
+        {
+          schemaName: 'referenceModelItem',
+          schemaCreator: referenceToItemSchemaOfAnotherModel,
+        },
+        {
+          schemaName: 'objectWithModelItem',
+          schemaCreator: createDerivedSchemaFromPreviouslyDefinedAnotherModelSchema,
+        },
+        {
+          schemaName: 'referenceModelList',
+          schemaCreator: referenceListSchemaFromAnotherModelItemSchema,
+        },
+        {
+          schemaName: 'customReferenceModelList',
+          schemaCreator: createListSchemaFromAnotherModelItemSchema,
+        },
+      ],
+    },
+  ]);
   models = {
     referenceModel: modelsSet.resolveByName('referenceModel'),
     referencingModel: modelsSet.resolveByName('referencingModel'),

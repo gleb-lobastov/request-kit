@@ -1,11 +1,12 @@
-import { IModelDefinition, IModel } from '../Model';
+// eslint-disable-next-line no-unused-vars
+import Model, { TModelDefinition } from '../Model';
 
-export interface IModelDefinitions extends Array<IModelDefinition> {}
+export interface TModelDefinitions extends Array<TModelDefinition> {}
 
 export interface IModelsConfig {
-  modelsDefinitions: IModelDefinitions;
+  modelsDefinitions: TModelDefinitions;
 }
 
-export interface IModelsMap {
-  [key: string]: IModel;
+export interface TModelsMap {
+  [key: string]: Model;
 }

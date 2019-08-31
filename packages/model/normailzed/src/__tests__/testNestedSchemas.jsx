@@ -7,33 +7,31 @@ beforeEach(() => {
   const nestedModelListRef = reference =>
     reference({ modelName: 'nestedModel', schemaName: 'list' });
 
-  const modelsSet = new ModelsSet({
-    modelsDefinitions: [
-      {
-        modelName: 'nestedModel',
-        toClientAdapter: value => value,
-        endpointResolver: null,
-        derivedSchemas: [
-          {
-            schemaName: 'list',
-            schemaCreator: reference => new Array(reference()),
-          },
-        ],
-      },
-      {
-        modelName: 'nestingModel',
-        toClientAdapter: value => value,
-        endpointResolver: null,
-        schema: {
-          definition: {
-            nestedModelItem: nestedModelItemRef,
-            nestedModelList: nestedModelListRef,
-          },
-          options: {},
+  const modelsSet = new ModelsSet([
+    {
+      modelName: 'nestedModel',
+      toClientAdapter: value => value,
+      endpointResolver: null,
+      derivedSchemas: [
+        {
+          schemaName: 'list',
+          schemaCreator: reference => new Array(reference()),
         },
+      ],
+    },
+    {
+      modelName: 'nestingModel',
+      toClientAdapter: value => value,
+      endpointResolver: null,
+      schema: {
+        definition: {
+          nestedModelItem: nestedModelItemRef,
+          nestedModelList: nestedModelListRef,
+        },
+        options: {},
       },
-    ],
-  });
+    },
+  ]);
   models = {
     nestingModel: modelsSet.resolveByName('nestingModel'),
     nestedModel: modelsSet.resolveByName('nestedModel'),
