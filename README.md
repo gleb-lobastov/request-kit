@@ -15,10 +15,10 @@ Take a look to [react-redux combination](./packages/integration/react-redux/READ
 
 - [x] Fetch data
 - [x] Switch to typescript
-- [ ] Submit data
-- [ ] Cache invalidation
-- [ ] Server data corruption checker
+- [x] Submit data
+- [x] Cache invalidation
 - [ ] Optimistic updates
+- [ ] Support react hooks
+- [ ] Server data corruption checker
 - [ ] Partial entities
 - [ ] Server side events
-- [ ] Support react hooks
