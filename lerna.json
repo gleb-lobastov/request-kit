@@ -7,7 +7,6 @@
     "packages/integration/*",
     "packages/model/*",
     "packages/preset/*",
-    "packages/provision/*",
-    "packages/utils/*"
+    "packages/provision/*"
   ]
 }
