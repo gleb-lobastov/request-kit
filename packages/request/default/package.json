@@ -1,7 +1,7 @@
 {
-  "name": "@request-kit/preset-react-redux-entities",
-  "version": "0.0.0",
-  "description": "react high order component, bound with redux, to process request and provide data to component",
+  "name": "@request-kit/request-default",
+  "version": "0.0.1",
+  "description": "react high order component API to request and provide data. Not for direct usage, use @request-kit/react-redux instead",
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf lib",
@@ -20,10 +20,7 @@
     "url": "git+https://github.com/gleb-lobastov/request-kit.git"
   },
   "keywords": [
-    "redux",
-    "request",
-    "data",
-    "state"
+    "request"
   ],
   "author": "Gleb Lobastov",
   "license": "MIT",
@@ -33,17 +30,5 @@
   "homepage": "https://github.com/gleb-lobastov/request-kit#readme",
   "publishConfig": {
     "access": "public"
-  },
-  "devDependencies": {
-    "jest-enzyme": "^7.1.0",
-    "redux": "^4.0.0"
-  },
-  "dependencies": {
-    "distribute-reducer": "^1.0.0",
-    "@request-kit/request-default": "^0.0.1",
-    "@request-kit/multiple-request": "^0.0.1",
-    "@request-kit/intg-react-redux": "^0.0.0",
-    "@request-kit/intg-redux-model-normalized": "^0.0.0",
-    "@request-kit/provision-react": "^0.3.0"
   }
 }

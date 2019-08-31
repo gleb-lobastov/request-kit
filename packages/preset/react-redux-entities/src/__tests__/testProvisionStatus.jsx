@@ -1,10 +1,9 @@
-import Enzyme from 'enzyme';
+import Enzyme, { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import { mount } from 'enzyme';
-import configureRequestKit from '../index.ts';
+import configureRequestKit from '../index';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -53,7 +52,7 @@ beforeEach(() => {
     applyMiddleware(reduxMiddleware),
   );
   const Presenter = () => <div className={CLASS_NAME} />;
-  ProvisionedComponent = provide(mapStateToRequirements)(Presenter);
+  ProvisionedComponent = Presenter;
 });
 
 describe('provide integration', () => {

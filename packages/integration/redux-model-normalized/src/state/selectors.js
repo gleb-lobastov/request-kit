@@ -1,17 +1,7 @@
-import { IModelsState, Id } from './interface';
+export const selectDict = (state, modelName) =>
+  (state && state[modelName]) || {};
 
-export const selectDict = <EntitiesState>(
-  state: IModelsState<EntitiesState>,
-  modelName: string,
-) => {
-  return state && state[modelName];
-};
-
-export const selectItem = <EntitiesState>(
-  state: IModelsState<EntitiesState>,
-  modelName: string,
-  id: Id,
-) => {
+export const selectItem = (state, modelName, id) => {
   const entitiesDict = selectDict(state, modelName);
   if (!entitiesDict) {
     return undefined;
@@ -19,10 +9,10 @@ export const selectItem = <EntitiesState>(
   return entitiesDict[id];
 };
 
-export const selectList = <EntitiesState>(
-  state: IModelsState<EntitiesState>,
-  modelName: string,
-  ids: Id[],
+export const selectList = (
+  state,
+  modelName,
+  ids,
   { shouldSkipMissing = false } = {},
 ) => {
   const entitiesDict = selectDict(state, modelName);
@@ -36,11 +26,7 @@ export const selectList = <EntitiesState>(
   return interimResult;
 };
 
-export const selectMissingIds = <EntitiesState>(
-  state: IModelsState<EntitiesState>,
-  modelName: string,
-  requiredIds: Id[],
-) => {
+export const selectMissingIds = (state, modelName, requiredIds) => {
   const entitiesDict = selectDict(state, modelName);
   if (!entitiesDict || !requiredIds) {
     return [];

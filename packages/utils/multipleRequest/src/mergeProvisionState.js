@@ -5,7 +5,7 @@ import {
   selectIsReady,
   selectIsPending,
   selectIsValid,
-} from '../controllerRedux';
+} from '@request-kit/controller-redux';
 
 export const mapValues = (object, iteratee) =>
   Object.entries(object).reduce((memo, [key, value]) => {

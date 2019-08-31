@@ -13,7 +13,7 @@ module.exports = {
   globals: {
     IS_PRODUCTION_ENV: false,
   },
-  setupFiles: ['<rootDir>/test/jest.setup.js'],
+  setupFiles: ['<rootDir>/test/setupPolyfill.js'],
   moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx'],
   projects: ['<rootDir>/packages/*/*'],
   transform: {

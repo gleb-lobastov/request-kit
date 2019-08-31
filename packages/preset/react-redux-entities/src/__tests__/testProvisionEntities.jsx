@@ -4,7 +4,7 @@ import React from 'react';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { mount } from 'enzyme';
-import configureRequestKit from '../index.ts';
+import configureRequestKit from '../index';
 
 Enzyme.configure({ adapter: new Adapter() });
 

@@ -11,6 +11,7 @@ const PACKAGES = {
     '@request-kit/intg-redux-model-normalized',
   PRESET_REACT_REDUX_ENTITIES: '@request-kit/preset-react-redux-entities',
   UTIL_MULTIPLE_REQUEST: '@request-kit/multiple-request',
+  REQUEST_DEFAULT: '@request-kit/request-default',
 };
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];

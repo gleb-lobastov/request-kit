@@ -7,6 +7,6 @@ export interface IModelsConfig {
   modelsDefinitions: TModelDefinitions;
 }
 
-export interface TModelsMap {
-  [key: string]: Model;
+export interface TModelsMap<TRequirements> {
+  [key: string]: Model<TRequirements>;
 }

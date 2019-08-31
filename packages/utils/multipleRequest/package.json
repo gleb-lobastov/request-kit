@@ -11,6 +11,9 @@
     "watch": "rollup -c -w --environment PACKAGE_NAME:$npm_package_name",
     "prepare": "npm run clean && npm run build:typings && npm run build"
   },
+  "dependencies": {
+    "@request-kit/controller-redux": "^0.3.0"
+  },
   "files": [
     "lib",
     "src"

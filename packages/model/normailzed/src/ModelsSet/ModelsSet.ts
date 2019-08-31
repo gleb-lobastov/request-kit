@@ -10,7 +10,7 @@ import { TModelRequirements } from '../interface';
 /* eslint-enable no-unused-vars */
 
 export default class ModelsSet<TRequirements> {
-  models: TModelsMap;
+  models: TModelsMap<TRequirements>;
 
   constructor(modelsDefinitions: TModelDefinitions) {
     // step-by-step definitions of model is required to provide references for existing schemas
