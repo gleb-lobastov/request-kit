@@ -9,7 +9,6 @@ const PACKAGES = {
   INTEGRATION_REACT_REDUX: '@request-kit/intg-react-redux',
   INTEGRATION_REDUX_MODEL_NORMALIZED:
     '@request-kit/intg-redux-model-normalized',
-  PRESET_REACT_REDUX: '@request-kit/preset-react-redux',
   PRESET_REACT_REDUX_ENTITIES: '@request-kit/preset-react-redux-entities',
 };
 
