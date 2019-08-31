@@ -1,6 +1,6 @@
 {
   "name": "@request-kit/intg-react-redux",
-  "version": "0.0.0",
+  "version": "0.4.0-alpha.0",
   "description": "react high order component, bound with redux, to process request and provide data to component",
   "main": "lib/index.js",
   "scripts": {
@@ -47,8 +47,8 @@
     "redux-mock-store": "^1.5.3"
   },
   "dependencies": {
-    "@request-kit/controller-redux": "^0.3.0",
-    "@request-kit/provision-react": "^0.3.0",
+    "@request-kit/controller-redux": "^0.4.0-alpha.0",
+    "@request-kit/provision-react": "^0.4.0-alpha.0",
     "shallowequal": "^1.0.2"
   }
 }

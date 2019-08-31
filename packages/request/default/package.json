@@ -1,6 +1,6 @@
 {
   "name": "@request-kit/request-default",
-  "version": "0.0.1",
+  "version": "0.4.0-alpha.0",
   "description": "react high order component API to request and provide data. Not for direct usage, use @request-kit/react-redux instead",
   "main": "lib/index.js",
   "scripts": {

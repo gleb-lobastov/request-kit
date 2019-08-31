@@ -1,6 +1,6 @@
 {
   "name": "@request-kit/preset-react-redux-entities",
-  "version": "0.0.0",
+  "version": "0.4.0-alpha.0",
   "description": "react high order component, bound with redux, to process request and provide data to component",
   "main": "lib/index.js",
   "scripts": {
@@ -39,11 +39,11 @@
     "redux": "^4.0.0"
   },
   "dependencies": {
-    "distribute-reducer": "^1.0.0",
-    "@request-kit/request-default": "^0.0.1",
-    "@request-kit/util-multiple-request": "^0.0.1",
-    "@request-kit/intg-react-redux": "^0.0.0",
-    "@request-kit/intg-redux-model-normalized": "^0.0.0",
-    "@request-kit/provision-react": "^0.3.0"
+    "@request-kit/intg-react-redux": "^0.4.0-alpha.0",
+    "@request-kit/intg-redux-model-normalized": "^0.4.0-alpha.0",
+    "@request-kit/provision-react": "^0.4.0-alpha.0",
+    "@request-kit/request-default": "^0.4.0-alpha.0",
+    "@request-kit/util-multiple-request": "^0.4.0-alpha.0",
+    "distribute-reducer": "^1.0.0"
   }
 }

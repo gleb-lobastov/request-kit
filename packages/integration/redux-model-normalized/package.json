@@ -1,6 +1,6 @@
 {
   "name": "@request-kit/intg-redux-model-normalized",
-  "version": "0.0.0",
+  "version": "0.4.0-alpha.0",
   "description": "enhancer for redux controller to integrate with model-normalized package",
   "main": "lib/index.js",
   "scripts": {
@@ -40,7 +40,7 @@
     "redux-mock-store": "^1.5.1"
   },
   "dependencies": {
-    "@request-kit/controller-redux": "^0.3.0",
-    "@request-kit/model-normalized": "^0.0.0"
+    "@request-kit/controller-redux": "^0.4.0-alpha.0",
+    "@request-kit/model-normalized": "^0.4.0-alpha.0"
   }
 }
